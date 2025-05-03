@@ -1,22 +1,6 @@
 #include <stdio.h>
 using namespace std;
 
-struct BenhAn{
-    string maBenhAn;
-    string chuanDoan;
-    string luuYQuanTrong;
-    BenhAn* next;
-};
-
-struct BenhAn{
-    string hoTen;
-    int tuoi;
-    string diaChi;
-    string maBenhNhan;
-    BenhAn* danhSachBenhAn;
-    BenhAn* next;
-};
-
 struct PhuongThucKham {
     string tenPhuongThuc;
     string moTa;
@@ -43,6 +27,25 @@ struct NhanSu {
     string hoTen;
     string chucVu;
 };
+
+struct BenhAn{
+    string maBenhAn;
+    string chuanDoan;
+    string luuYQuanTrong;
+    
+    BenhAn* next;
+};
+
+struct BenhNhan{
+    string hoTen;
+    int tuoi;
+    string diaChi;
+    string maBenhNhan;
+    BenhAn* danhSachBenhAn;
+    BenhAn* next;
+};
+
+
 
 
 /*BenhNhan* addPatient(BenhNhan* head, string hoTen, int tuoi, string diaChi, string maBenhNhan) {
