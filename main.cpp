@@ -1,14 +1,37 @@
 #include <stdio.h>
 using namespace std;
 
+struct BenhNhan{
+    string hoTen;
+    int tuoi;
+    string diaChi;
+    string GioiTinh;
+    string maBenhNhan;
+    string TienSuBenhAn;
+
+};
 struct PhuongThucKham {
     string tenPhuongThuc;
     string moTa;
 };
 
+struct Kham2 {
+    float heartRate;
+    float pWave;
+    float qrsComplex;
+    float tWave;
+};
+
+struct Kham1 {
+    string testType;
+    int score;
+    string interpretation;
+};
+
 struct Thuoc {
     string tenThuoc;
     int soLuong;
+    string hanDung;
 };
 
 struct DungCuYTe {
@@ -19,36 +42,29 @@ struct DungCuYTe {
 struct PhongKham {
     string ngayNhapVien;
     string tenPhong;
-    vector<Thuoc> danhSachThuoc;
-    vector<DungCuYTe> danhSachDungCu;
+    int soPhong;
+    stirn chuyenKhoa
 };
 
 struct NhanSu {
     string hoTen;
     string chucVu;
+    int Tuoi;    
 };
-
-struct BenhAn{
+struct BenhAn {
+BenhNhan *bn;
+    int MaSoBenhAn;
     string maBenhAn;
     string chuanDoan;
     string luuYQuanTrong;
-    
-    BenhAn* next;
-};
-
-struct BenhNhan{
-    string hoTen;
-    int tuoi;
-    string diaChi;
-    string maBenhNhan;
-    BenhAn* danhSachBenhAn;
-    BenhAn* next;
 };
 
 
 
 
-/*BenhNhan* addPatient(BenhNhan* head, string hoTen, int tuoi, string diaChi, string maBenhNhan) {
+
+
+BenhNhan* addPatient(BenhNhan* head, string hoTen, int tuoi, string diaChi, string maBenhNhan) {
     BenhNhan* newBn = new BenhNhan{hoTen, tuoi, diaChi, maBenhNhan, nullptr};
     if (!head) {
         return newBn;
@@ -68,7 +84,7 @@ while(head){
 cout<<"Bệnh nhân: "<<temp->hoTen<<", Tuổi: "<<temp->tuoi<<", Địa chỉ: "<<temp->diaChi<< " Mã Bệnh Nhân"<<temp->maBenhNhan << endl;
 temp=temp->next;
 }
-}*/ //-TEMPORARY OFFLINE
+}
 
 
 
