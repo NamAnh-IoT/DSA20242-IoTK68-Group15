@@ -1,0 +1,19 @@
+Welcome to Umbrella National MEdical Care:
+--------------------------------------------------------
+What Can I help you today:
+1.Patient Management
+2.Patient Medical Records
+3.Patient Billing System
+4.Patient Appointment Scheduling
+
+Enter Your Action: 1
+You Chose Patient Management:
+--------------------------------------------------------
+1. Add Patient        (Full information required)
+2.Remove Patient      (Information input required)
+3. Find Patient       (Information Input required)
+4. Update Patient Information
+5.DisplayPatients.
+6.Others.
+
+Enter your Action:
