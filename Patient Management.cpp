@@ -52,6 +52,32 @@ void addLast(Node*& head, Node*& tail, BenhNhan& bn) {
     tail = node;
 }
 
+bool isPositiveInteger(const string& str) {
+    if (str.empty()) return false;
+    for (char c : str) {
+        if (!isdigit(c)) return false;
+    }
+    if (str.length() > 1 && str[0] == '0') return false;
+    return stoll(str) > 0;
+}
+
+bool isAlphaSpace(const string& str) {
+    if (str.empty()) return false;
+    for (char c : str) {
+        if (!(isalpha(c) || c == ' ' || (unsigned char)c >= 128)) return false;
+    }
+    return true;
+}
+
+
+bool isAlnumString(const string& str) {
+    if (str.empty()) return false;
+    for (char c : str) {
+        if (!isalnum(c)) return false;
+    }
+    return true;
+}
+
 void inDanhSach(Node* head) {
     int idx = 1;
     if (head == nullptr) {
@@ -89,43 +115,104 @@ bool kiemTraTrung(Node* head, const string& ten, long long id, const string& maB
 void addPatientAtPosition(Node*& head, Node*& tail, int position) {
     BenhNhan bn;
     bool trungTen, trungID, trungMa;
+    string input;
+
     do {
-        do {
-            cout << "ID: "; cin >> bn.id;
-            if(bn.id <= 0) cout << "ID phải là số dương!\n";
-        } while(bn.id <= 0);
-        cin.ignore();
+        cout << "ID: ";
+        getline(cin, input);
+        if (!isPositiveInteger(input)) {
+            cout << "ID phải là số nguyên dương!\n";
+            continue;
+        }
+        bn.id = stoll(input);
+        if (kiemTraTrung(head, "", bn.id, "", trungTen, trungID, trungMa) && trungID) {
+            cout << "ID bị trùng!\n";
+            continue;
+        }
+        break;
+    } while (true);
+
+    do {
         cout << "Ho ten: ";
         getline(cin, bn.hoTen);
+        if (!isAlphaSpace(bn.hoTen)) {
+            cout << "Tên chỉ được phép chứa chữ cái và dấu cách!\n";
+            continue;
+        }
+        if (kiemTraTrung(head, bn.hoTen, -1, "", trungTen, trungID, trungMa) && trungTen) {
+            cout << "Tên bị trùng!\n";
+            continue;
+        }
+        break;
+    } while (true);
+
+    do {
         cout << "Ma benh nhan: ";
         getline(cin, bn.maBenhNhan);
-        if (kiemTraTrung(head, bn.hoTen, bn.id, bn.maBenhNhan, trungTen, trungID, trungMa)) {
-            cout << "Lỗi: ";
-            if (trungID) cout << "ID ";
-            if (trungMa) cout << "Mã bệnh nhân ";
-            if (trungTen) cout << "Tên ";
-            cout << "bạn nhập bị trùng với thông tin bệnh nhân có sẵn, vui lòng nhập lại các trường bị trùng!\n";
+        if (!isAlnumString(bn.maBenhNhan)) {
+            cout << "Mã bệnh nhân chỉ bao gồm chữ cái và số, không có dấu cách hoặc ký tự đặc biệt!\n";
+            continue;
         }
-    } while (kiemTraTrung(head, bn.hoTen, bn.id, bn.maBenhNhan, trungTen, trungID, trungMa));
-    do {
-        cout << "Tuoi: "; cin >> bn.tuoi;
-        if (bn.tuoi <= 0) cout << "Tuổi phải là số nguyên dương!\n";
-    } while (bn.tuoi <= 0);
-    cin.ignore();
+        if (kiemTraTrung(head, "", -1, bn.maBenhNhan, trungTen, trungID, trungMa) && trungMa) {
+            cout << "Mã bệnh nhân bị trùng!\n";
+            continue;
+        }
+        break;
+    } while (true);
 
-    cout << "Dia chi: "; getline(cin, bn.diaChi);
     do {
-        cout << "Gioi tinh (Nam/Nu): "; getline(cin, bn.GioiTinh);
+        cout << "Tuoi: ";
+        getline(cin, input);
+        if (!isPositiveInteger(input)) {
+            cout << "Tuổi phải là số nguyên dương!\n";
+            continue;
+        }
+        bn.tuoi = stoi(input);
+        break;
+    } while (true);
+
+    do {
+        cout << "Dia chi: ";
+        getline(cin, bn.diaChi);
+        if (!isAlphaSpace(bn.diaChi)) {
+            cout << "Địa chỉ chỉ được phép chứa chữ cái và dấu cách!\n";
+            continue;
+        }
+        break;
+    } while (true);
+
+    do {
+        cout << "Gioi tinh (Nam/Nu): ";
+        getline(cin, bn.GioiTinh);
         for (auto& c : bn.GioiTinh) c = tolower(c);
-        if (bn.GioiTinh != "nam" && bn.GioiTinh != "nu") {
-            cout << "Giới tính chỉ được nhập Nam hoặc Nu!\n";
+        if (!isAlphaSpace(bn.GioiTinh) || (bn.GioiTinh != "nam" && bn.GioiTinh != "nu")) {
+            cout << "Giới tính chỉ được phép nhập 'Nam' hoặc 'Nu', không chứa ký tự đặc biệt.\n";
+            continue;
         }
-    } while (bn.GioiTinh != "nam" && bn.GioiTinh != "nu");
+        break;
+    } while (true);
 
-    cout << "Tien su benh an: "; getline(cin, bn.TienSuBenhAn);
-    cout << "Luu tru (1: true, 0: false): "; cin >> bn.luuTru;
-    cin.ignore();
-    
+    do {
+        cout << "Tien su benh an: ";
+        getline(cin, bn.TienSuBenhAn);
+        if (!isAlphaSpace(bn.TienSuBenhAn)) {
+            cout << "Tiền sử bệnh án chỉ được phép chứa chữ cái và dấu cách!\n";
+            continue;
+        }
+        break;
+    } while (true);
+
+    do {
+        cout << "Luu tru (1: true, 0: false): ";
+        getline(cin, input);
+        if (input != "1" && input != "0") {
+            cout << "Chỉ được nhập 1 hoặc 0!\n";
+            continue;
+        }
+        bn.luuTru = (input == "1");
+        break;
+    } while (true);
+
     Node* node = new Node;
     node->data = bn;
     node->next = nullptr;
@@ -172,30 +259,51 @@ void removePatient(Node*& head, Node*& tail) {
     cout << "Lựa chọn: ";
     cin >> luaChon;
     cin.ignore();
+
     long long id = -1;
     string ten = "", gioiTinh = "", tienSu = "";
 
     if (luaChon == 1 || luaChon == 5) {
-        cout << "Nhập ID: ";
-        cin >> id;
-        cin.ignore();
+        string id_str;
+        do {
+            cout << "Nhập ID: ";
+            getline(cin, id_str);
+            if (!isPositiveInteger(id_str)) {
+                cout << "ID phải là số nguyên dương. Vui lòng nhập lại!\n";
+            }
+        } while (!isPositiveInteger(id_str));
+        id = stoll(id_str);
     }
+
     if (luaChon == 2 || luaChon == 5) {
-        cout << "Nhập họ tên: ";
-        getline(cin, ten);
+        do {
+            cout << "Nhập họ tên: ";
+            getline(cin, ten);
+            if (!isAlphaSpace(ten)) {
+                cout << "Tên chỉ được phép chứa chữ cái và dấu cách, không chứa ký tự đặc biệt. Vui lòng nhập lại!\n";
+            }
+        } while (!isAlphaSpace(ten));
     }
+
     if (luaChon == 3 || luaChon == 5) {
         do {
             cout << "Nhập giới tính (Nam/Nu): ";
             getline(cin, gioiTinh);
             for (auto& c : gioiTinh) c = tolower(c);
-            if (gioiTinh != "nam" && gioiTinh != "nu")
-               cout << "Giới tính không hợp lệ. Vui lòng nhập lại (Nam/Nu).\n";
-        } while (gioiTinh != "nam" && gioiTinh != "nu");
+            if (!isAlphaSpace(gioiTinh) || (gioiTinh != "nam" && gioiTinh != "nu")) {
+                cout << "Giới tính không hợp lệ. Vui lòng nhập lại (Nam/Nu, không có ký tự đặc biệt).\n";
+            }
+        } while (!isAlphaSpace(gioiTinh) || (gioiTinh != "nam" && gioiTinh != "nu"));
     }
+
     if (luaChon == 4 || luaChon == 5) {
-        cout << "Nhập tiền sử bệnh án: ";
-        getline(cin, tienSu);
+        do {
+            cout << "Nhập tiền sử bệnh án: ";
+            getline(cin, tienSu);
+            if (!isAlphaSpace(tienSu)) {
+                cout << "Tiền sử bệnh án chỉ được phép chứa chữ cái và dấu cách. Vui lòng nhập lại!\n";
+            }
+        } while (!isAlphaSpace(tienSu));
     }
 
     Node* current = head;
@@ -246,6 +354,101 @@ void removePatient(Node*& head, Node*& tail) {
     else {
         cout << "Danh sách sau khi xóa:\n";
         inDanhSach(head);
+    }
+}
+
+void searchPatient(Node* head) {
+    if (!head) {
+        cout << "Danh sách bệnh nhân trống!\n";
+        return;
+    }
+    int luaChon;
+    cout << "Chọn tiêu chí tìm kiếm:\n";
+    cout << "1. Theo họ tên\n";
+    cout << "2. Theo tuổi\n";
+    cout << "3. Theo giới tính\n";
+    cout << "4. Theo địa chỉ\n";
+    cout << "5. Kết hợp nhiều tiêu chí\n";
+    cout << "Lựa chọn: ";
+    cin >> luaChon;
+    cin.ignore();
+
+    string ten = "", tuoi_str = "", gioiTinh = "", diaChi = "";
+    int tuoi = -1;
+
+    if (luaChon == 1 || luaChon == 5) {
+        do {
+            cout << "Nhập họ tên: ";
+            getline(cin, ten);
+            if (!isAlphaSpace(ten)) {
+                cout << "Tên chỉ được chứa chữ cái và dấu cách.\n";
+            }
+        } while (!isAlphaSpace(ten));
+    }
+    if (luaChon == 2 || luaChon == 5) {
+        do {
+            cout << "Nhập tuổi: ";
+            getline(cin, tuoi_str);
+            if (!isPositiveInteger(tuoi_str)) {
+                cout << "Tuổi phải là số nguyên dương!\n";
+            }
+        } while (!isPositiveInteger(tuoi_str));
+        tuoi = stoi(tuoi_str);
+    }
+    if (luaChon == 3 || luaChon == 5) {
+        do {
+            cout << "Nhập giới tính (Nam/Nu): ";
+            getline(cin, gioiTinh);
+            for (auto& c : gioiTinh) c = tolower(c);
+            if (!isAlphaSpace(gioiTinh) || (gioiTinh != "nam" && gioiTinh != "nu")) {
+                cout << "Giới tính chỉ được phép nhập 'Nam' hoặc 'Nu', không chứa ký tự đặc biệt.\n";
+            }
+        } while (!isAlphaSpace(gioiTinh) || (gioiTinh != "nam" && gioiTinh != "nu"));
+    }
+    if (luaChon == 4 || luaChon == 5) {
+        do {
+            cout << "Nhập địa chỉ: ";
+            getline(cin, diaChi);
+            if (!isAlphaSpace(diaChi)) {
+                cout << "Địa chỉ chỉ được phép chứa chữ cái và dấu cách!\n";
+            }
+        } while (!isAlphaSpace(diaChi));
+    }
+
+    Node* resultHead = nullptr;
+    Node* resultTail = nullptr;
+    Node* current = head;
+    while (current) {
+        bool match = true;
+        if ((luaChon == 1 || luaChon == 5) && current->data.hoTen != ten) match = false;
+        if ((luaChon == 2 || luaChon == 5) && current->data.tuoi != tuoi) match = false;
+        if ((luaChon == 3 || luaChon == 5) && current->data.GioiTinh != gioiTinh) match = false;
+        if ((luaChon == 4 || luaChon == 5) && current->data.diaChi != diaChi) match = false;
+
+        if (match) {
+            Node* foundNode = taoNode(current->data);
+            if (!resultHead) {
+                resultHead = resultTail = foundNode;
+            } else {
+                resultTail->next = foundNode;
+                foundNode->prev = resultTail;
+                resultTail = foundNode;
+            }
+        }
+        current = current->next;
+    }
+
+    if (!resultHead) {
+        cout << "Bệnh nhân không tồn tại!\n";
+    } else {
+        cout << "KẾT QUẢ TÌM KIẾM:\n";
+        inDanhSach(resultHead);
+    }
+
+    while (resultHead) {
+        Node* temp = resultHead;
+        resultHead = resultHead->next;
+        delete temp;
     }
 }
 
