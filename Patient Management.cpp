@@ -51,28 +51,34 @@ void addLast(Node*& head, Node*& tail, BenhNhan& bn) {
     }
     tail = node;
 }
-
+//hàm kiểm tra số nguyên dương,áp dụng cho ID, tuổi, mã bệnh nhân
 bool isPositiveInteger(const string& str) {
     if (str.empty()) return false;
     for (char c : str) {
+        //char c : str là rút từng kí tự trong chuỗi
+        //isdigit là hàm kiểm tra chữ số
         if (!isdigit(c)) return false;
     }
+    //không cho phép dãy số bắt đầu với không
     if (str.length() > 1 && str[0] == '0') return false;
     return stoll(str) > 0;
 }
-
+//kiểm tra chữ cái đầu vào, cho phép in hoa và ký tự dấu tiếng việt. 
 bool isAlphaSpace(const string& str) {
     if (str.empty()) return false;
     for (char c : str) {
+         //char c : str là rút từng kí tự trong chuỗi
+        //isalpha là hàm kiểm tra chữ cái
         if (!(isalpha(c) || c == ' ' || (unsigned char)c >= 128)) return false;
     }
     return true;
 }
 
-
+//kiểm tra đầu vào có kí tự đặc biệt không (ví dụ như "$,%,^,&,*,(,@,....)
 bool isAlnumString(const string& str) {
     if (str.empty()) return false;
     for (char c : str) {
+        //isalnum là hàm kiểm tra kí tự đặc biệt
         if (!isalnum(c)) return false;
     }
     return true;
@@ -458,6 +464,131 @@ if (!node) {
     return;
 }
 
+void UpdatePatient(Node* head) {
+    if (!head) {
+        cout << "Danh sách bệnh nhân trống!\n";
+        return;
+    }
+    string input;
+    long long id;
+    Node* current = head;
+    
+    do {
+        cout << "Nhập ID bệnh nhân cần cập nhật: ";
+        getline(cin, input);
+        if (!isPositiveInteger(input)) {
+            cout << "ID phải là số nguyên dương!\n";
+            continue;
+        }
+        id = stoll(input);
+        break;
+    } while (true);
+
+    while (current) {
+        if (current->data.id == id) break;
+        current = current->next;
+    }
+    if (!current) {
+        cout << "Không tìm thấy bệnh nhân có ID này!\n";
+        return;
+    }
+
+    cout << "\n--- Thông tin hiện tại của bệnh nhân ---\n";
+    cout << "ID: " << current->data.id << endl;
+    cout << "Họ tên: " << current->data.hoTen << endl;
+    cout << "Tuổi: " << current->data.tuoi << endl;
+    cout << "Địa chỉ: " << current->data.diaChi << endl;
+    cout << "Giới tính: " << current->data.GioiTinh << endl;
+    cout << "Mã bệnh nhân: " << current->data.maBenhNhan << endl;
+    cout << "Tiền sử bệnh án: " << current->data.TienSuBenhAn << endl;
+    cout << "Lưu trữ: " << (current->data.luuTru ? "true" : "false") << endl;
+
+    cout << "\n--- Nhập thông tin mới (Enter để giữ nguyên) ---\n";
+
+    cout << "Họ tên mới: ";
+    getline(cin, input);
+    if (!input.empty()) {
+        if (isAlphaSpace(input)) {
+            current->data.hoTen = input;
+        } else {
+            cout << "Tên không hợp lệ, giữ nguyên giá trị cũ!\n";
+        }
+    }
+
+    cout << "Mã bệnh nhân mới: ";
+    getline(cin, input);
+    if (!input.empty()) {
+        if (isAlnumString(input)) {
+            current->data.maBenhNhan = input;
+        } else {
+            cout << "Mã bệnh nhân không hợp lệ, giữ nguyên giá trị cũ!\n";
+        }
+    }
+
+    cout << "Tuổi mới: ";
+    getline(cin, input);
+    if (!input.empty()) {
+        if (isPositiveInteger(input)) {
+            current->data.tuoi = stoi(input);
+        } else {
+            cout << "Tuổi không hợp lệ, giữ nguyên giá trị cũ!\n";
+        }
+    }
+   
+    cout << "Địa chỉ mới: ";
+    getline(cin, input);
+    if (!input.empty()) {
+        if (isAlphaSpace(input)) {
+            current->data.diaChi = input;
+        } else {
+            cout << "Địa chỉ không hợp lệ, giữ nguyên giá trị cũ!\n";
+        }
+    }
+
+    cout << "Giới tính mới (Nam/Nu): ";
+    getline(cin, input);
+    if (!input.empty()) {
+        string temp = input;
+        for (auto& c : temp) c = tolower(c);
+        if (isAlphaSpace(input) && (temp == "nam" || temp == "nu")) {
+            current->data.GioiTinh = input;
+        } else {
+            cout << "Giới tính không hợp lệ, giữ nguyên giá trị cũ!\n";
+        }
+    }
+
+    cout << "Tiền sử bệnh án mới: ";
+    getline(cin, input);
+    if (!input.empty()) {
+        if (isAlphaSpace(input)) {
+            current->data.TienSuBenhAn = input;
+        } else {
+            cout << "Tiền sử bệnh án không hợp lệ, giữ nguyên giá trị cũ!\n";
+        }
+    }
+
+    cout << "Lưu trữ mới (1: true, 0: false): ";
+    getline(cin, input);
+    if (!input.empty()) {
+        if (input == "1") {
+            current->data.luuTru = true;
+        } else if (input == "0") {
+            current->data.luuTru = false;
+        } else {
+            cout << "Giá trị lưu trữ không hợp lệ, giữ nguyên giá trị cũ!\n";
+        }
+    }
+
+    cout << "\n--- Cập nhật thành công! Thông tin mới của bệnh nhân ---\n";
+    cout << "ID: " << current->data.id << endl;
+    cout << "Họ tên: " << current->data.hoTen << endl;
+    cout << "Tuổi: " << current->data.tuoi << endl;
+    cout << "Địa chỉ: " << current->data.diaChi << endl;
+    cout << "Giới tính: " << current->data.GioiTinh << endl;
+    cout << "Mã bệnh nhân: " << current->data.maBenhNhan << endl;
+    cout << "Tiền sử bệnh án: " << current->data.TienSuBenhAn << endl;
+    cout << "Lưu trữ: " << (current->data.luuTru ? "true" : "false") << endl;
+}
 
 /*
 void luuDanhSachVaoFile(Node* head, const string& filename) {
