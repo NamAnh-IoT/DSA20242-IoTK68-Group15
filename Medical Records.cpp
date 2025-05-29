@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
-#include <Patient Management.cpp>
+#include "Patient Management.cpp"
 
 using namespace std;
 
 
-/*Các chức năng bạn nêu ra đã hợp lý và sát với thực tế quản lý bệnh án:
+/*1.
 Ghi nhận lịch sử khám bệnh, điều trị: Mỗi bệnh nhân sẽ có một hoặc nhiều lần khám, mỗi lần là một bản ghi riêng (date, chẩn đoán, điều trị...).
 Lưu kết quả xét nghiệm, hình ảnh chẩn đoán: Cần lưu đường dẫn file/hình ảnh (hoặc mã hóa mô tả) và ngày thực hiện, loại xét nghiệm/hình ảnh.
 Tra cứu bệnh lý theo thời gian: Cho phép tìm kiếm, lọc các bệnh án của bệnh nhân theo mốc thời gian.
@@ -25,7 +25,8 @@ Tái sử dụng hàm kiểm tra nhập liệu, xuất thông tin: Có thể dù
 3. Các lưu ý thêm:
 Nếu muốn đơn giản, có thể chỉ lưu đường dẫn file hình ảnh thay vì nội dung ảnh thật.
 Cân nhắc thêm chức năng xuất toàn bộ lịch sử bệnh án một bệnh nhân (xuất báo cáo).
-Nếu muốn mở rộng: có thể cho phép liên kết nhanh giữa bệnh nhân và bệnh án qua ID.*/
+Nếu muốn mở rộng: có thể cho phép liên kết nhanh giữa bệnh nhân và bệnh án qua ID.
+*/
 struct MedicalRecord {
     long long recordID;
     long long patientID;
@@ -37,7 +38,7 @@ struct MedicalRecord {
     string ketQuaXetNghiem;
     string hinhAnhChanDoan;
     string trangThai;
-    tring ghiChu;
+    string ghiChu;
 };
 struct NodeRecord {
     MedicalRecord data;
@@ -132,43 +133,41 @@ bool kiemTraTrungRecord(NodeRecord* head, long long recordID) {
     }
     return false;
 }
+bool kiemTraThongTinMedicalRecord(const MedicalRecord& mr, NodeRecord* head) {
+    if (!isPositiveInteger(to_string(mr.recordID)) || kiemTraTrungRecord(head, mr.recordID)) return false;
+    if (!isPositiveInteger(to_string(mr.patientID))) return false;
+    if (mr.ngayKham.empty()) return false;
+    if (mr.chanDoan.empty()) return false;
+    if (mr.phuongPhapDieuTri.empty()) return false;
+    if (mr.trangThai.empty()) return false;
+    if (!mr.bacSiPhuTrach.empty() && !isAlphaSpace(mr.bacSiPhuTrach)) return false;
+    if (!mr.loaiBenhAn.empty() && !isAlnumString(mr.loaiBenhAn)) return false;
+    return true;
+}
 void nhapThongTin(MedicalRecord& mr, NodeRecord* head) {
     string input;
     do {
-        cout << "Nhập mã bệnh án: ";
-        getline(cin, input);
-        if (!isPositiveInteger(input)) {
-            cout << "Mã bệnh án phải là số nguyên dương!\n";
-            continue;
-        }
-        mr.recordID = stoll(input);
-        if (kiemTraTrungRecord(head, mr.recordID)) {
-            cout << "Mã bệnh án bị trùng!\n";
-            continue;
-        }
-        break;
-    } while (true);
-    cout << "Nhập ID bệnh nhân: ";
-    getline(cin, input);
-    if (isPositiveInteger(input)) mr.patientID = stoll(input); else mr.patientID = -1;
-    cout << "Ngày khám: ";
-    getline(cin, mr.ngayKham);
-    cout << "Loại bệnh án: ";
-    getline(cin, mr.loaiBenhAn);
-    cout << "Bác sĩ phụ trách: ";
-    getline(cin, mr.bacSiPhuTrach);
-    cout << "Chẩn đoán: ";
-    getline(cin, mr.chanDoan);
-    cout << "Phương pháp điều trị: ";
-    getline(cin, mr.phuongPhapDieuTri);
-    cout << "Kết quả xét nghiệm: ";
-    getline(cin, mr.ketQuaXetNghiem);
-    cout << "Hình ảnh chẩn đoán: ";
-    getline(cin, mr.hinhAnhChanDoan);
-    cout << "Trạng thái: ";
-    getline(cin, mr.trangThai);
-    cout << "Ghi chú: ";
-    getline(cin, mr.ghiChu);
+        cout << "Nhập mã bệnh án: "; getline(cin, input);
+    } while (!isPositiveInteger(input) || kiemTraTrungRecord(head, stoll(input)));
+    mr.recordID = stoll(input);
+
+    do { cout << "Nhập ID bệnh nhân: "; getline(cin, input); }
+    while (!isPositiveInteger(input));
+    mr.patientID = stoll(input);
+
+    do { cout << "Ngày khám: "; getline(cin, mr.ngayKham); }
+    while (mr.ngayKham.empty());
+    cout << "Loại bệnh án: "; getline(cin, mr.loaiBenhAn);
+    cout << "Bác sĩ phụ trách: "; getline(cin, mr.bacSiPhuTrach);
+    do { cout << "Chẩn đoán: "; getline(cin, mr.chanDoan); }
+    while (mr.chanDoan.empty());
+    do { cout << "Phương pháp điều trị: "; getline(cin, mr.phuongPhapDieuTri); }
+    while (mr.phuongPhapDieuTri.empty());
+    cout << "Kết quả xét nghiệm: "; getline(cin, mr.ketQuaXetNghiem);
+    cout << "Hình ảnh chẩn đoán: "; getline(cin, mr.hinhAnhChanDoan);
+    do { cout << "Trạng thái: "; getline(cin, mr.trangThai); }
+    while (mr.trangThai.empty());
+    cout << "Ghi chú: "; getline(cin, mr.ghiChu);
 }
 NodeRecord* timRecordTheoID(NodeRecord* head, long long recordID) {
     while (head) {
@@ -176,6 +175,16 @@ NodeRecord* timRecordTheoID(NodeRecord* head, long long recordID) {
         head = head->next;
     }
     return nullptr;
+}
+void themBenhAn(NodeRecord*& head, NodeRecord*& tail) {
+    MedicalRecord mr;
+    nhapThongTin(mr, head);
+    if (!kiemTraThongTinMedicalRecord(mr, head)) {
+        cout << "Không thể thêm bệnh án do dữ liệu không hợp lệ!\n";
+        return;
+    }
+    addLast(head, tail, mr);
+    cout << "Đã thêm bệnh án thành công!\n";
 }
 void capNhatRecord(NodeRecord* head) {
     string input;
@@ -199,7 +208,7 @@ void capNhatRecord(NodeRecord* head) {
     cout << "Loại bệnh án [" << mr.loaiBenhAn << "]: ";
     getline(cin, input);
     if (!input.empty()) mr.loaiBenhAn = input;
-    cout << "Bác sĩ phụ trách [" << mr.bacSiPhuTrach << "]: ";
+<< "Bác sĩ phụ trách [" << mr.bacSiPhuTrach << "]: ";
     getline(cin, input);
     if (!input.empty()) mr.bacSiPhuTrach = input;
     cout << "Chẩn đoán [" << mr.chanDoan << "]: ";
@@ -220,6 +229,11 @@ void capNhatRecord(NodeRecord* head) {
     cout << "Ghi chú [" << mr.ghiChu << "]: ";
     getline(cin, input);
     if (!input.empty()) mr.ghiChu = input;
+    if (!kiemTraThongTinMedicalRecord(mr, head)) {
+        cout << "Dữ liệu cập nhật không hợp lệ. Không lưu thay đổi!\n";
+        return;
+    }
+
     cout << "Đã cập nhật bệnh án!\n";
 }
 void xoaRecordTheoID(NodeRecord*& head, NodeRecord*& tail, long long recordID) {
