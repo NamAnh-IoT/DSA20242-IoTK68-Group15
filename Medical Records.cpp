@@ -132,3 +132,109 @@ bool kiemTraTrungRecord(NodeRecord* head, long long recordID) {
     }
     return false;
 }
+void nhapThongTin(MedicalRecord& mr, NodeRecord* head) {
+    string input;
+    do {
+        cout << "Nhập mã bệnh án: ";
+        getline(cin, input);
+        if (!isPositiveInteger(input)) {
+            cout << "Mã bệnh án phải là số nguyên dương!\n";
+            continue;
+        }
+        mr.recordID = stoll(input);
+        if (kiemTraTrungRecord(head, mr.recordID)) {
+            cout << "Mã bệnh án bị trùng!\n";
+            continue;
+        }
+        break;
+    } while (true);
+    cout << "Nhập ID bệnh nhân: ";
+    getline(cin, input);
+    if (isPositiveInteger(input)) mr.patientID = stoll(input); else mr.patientID = -1;
+    cout << "Ngày khám: ";
+    getline(cin, mr.ngayKham);
+    cout << "Loại bệnh án: ";
+    getline(cin, mr.loaiBenhAn);
+    cout << "Bác sĩ phụ trách: ";
+    getline(cin, mr.bacSiPhuTrach);
+    cout << "Chẩn đoán: ";
+    getline(cin, mr.chanDoan);
+    cout << "Phương pháp điều trị: ";
+    getline(cin, mr.phuongPhapDieuTri);
+    cout << "Kết quả xét nghiệm: ";
+    getline(cin, mr.ketQuaXetNghiem);
+    cout << "Hình ảnh chẩn đoán: ";
+    getline(cin, mr.hinhAnhChanDoan);
+    cout << "Trạng thái: ";
+    getline(cin, mr.trangThai);
+    cout << "Ghi chú: ";
+    getline(cin, mr.ghiChu);
+}
+NodeRecord* timRecordTheoID(NodeRecord* head, long long recordID) {
+    while (head) {
+        if (head->data.recordID == recordID) return head;
+        head = head->next;
+    }
+    return nullptr;
+}
+void capNhatRecord(NodeRecord* head) {
+    string input;
+    cout << "Nhập mã bệnh án cần cập nhật: ";
+    getline(cin, input);
+    if (!isPositiveInteger(input)) {
+        cout << "Mã bệnh án không hợp lệ!\n";
+        return;
+    }
+    long long recordID = stoll(input);
+    NodeRecord* node = timRecordTheoID(head, recordID);
+    if (!node) {
+        cout << "Không tìm thấy bệnh án này!\n";
+        return;
+    }
+    MedicalRecord& mr = node->data;
+    cout << "Nhập thông tin mới (nhấn Enter để giữ nguyên):\n";
+    cout << "Ngày khám [" << mr.ngayKham << "]: ";
+    getline(cin, input);
+    if (!input.empty()) mr.ngayKham = input;
+    cout << "Loại bệnh án [" << mr.loaiBenhAn << "]: ";
+    getline(cin, input);
+    if (!input.empty()) mr.loaiBenhAn = input;
+    cout << "Bác sĩ phụ trách [" << mr.bacSiPhuTrach << "]: ";
+    getline(cin, input);
+    if (!input.empty()) mr.bacSiPhuTrach = input;
+    cout << "Chẩn đoán [" << mr.chanDoan << "]: ";
+    getline(cin, input);
+    if (!input.empty()) mr.chanDoan = input;
+    cout << "Phương pháp điều trị [" << mr.phuongPhapDieuTri << "]: ";
+    getline(cin, input);
+    if (!input.empty()) mr.phuongPhapDieuTri = input;
+    cout << "Kết quả xét nghiệm [" << mr.ketQuaXetNghiem << "]: ";
+    getline(cin, input);
+    if (!input.empty()) mr.ketQuaXetNghiem = input;
+    cout << "Hình ảnh chẩn đoán [" << mr.hinhAnhChanDoan << "]: ";
+    getline(cin, input);
+    if (!input.empty()) mr.hinhAnhChanDoan = input;
+    cout << "Trạng thái [" << mr.trangThai << "]: ";
+    getline(cin, input);
+    if (!input.empty()) mr.trangThai = input;
+    cout << "Ghi chú [" << mr.ghiChu << "]: ";
+    getline(cin, input);
+    if (!input.empty()) mr.ghiChu = input;
+    cout << "Đã cập nhật bệnh án!\n";
+}
+void xoaRecordTheoID(NodeRecord*& head, NodeRecord*& tail, long long recordID) {
+    NodeRecord* node = head;
+    while (node) {
+        if (node->data.recordID == recordID) {
+            if (node == head) head = node->next;
+            if (node == tail) tail = node->prev;
+            if (node->prev) node->prev->next = node->next;
+            if (node->next) node->next->prev = node->prev;
+            delete node;
+            cout << "Đã xóa bệnh án " << recordID << endl;
+            return;
+        }
+        node = node->next;
+    }
+    cout << "Không tìm thấy bệnh án có mã này!\n";
+}
