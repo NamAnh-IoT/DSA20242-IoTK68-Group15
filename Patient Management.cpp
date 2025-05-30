@@ -48,6 +48,39 @@ void addLast(Node*& head, Node*& tail, BenhNhan& bn) {
     }
     tail = node;
 }
+bool isPositiveInteger(const string& str) {
+    if (str.empty()) return false;
+    for (char c : str) {
+        if (!isdigit(c)) return false;
+    }
+    if (str.length() > 1 && str[0] == '0') return false;
+    return stoll(str) > 0;
+}
+bool isAlphaSpace(const string& str) {
+    if (str.empty()) return false;
+    for (char c : str) {
+        if (!(isalpha(c) || c == ' ' || (unsigned char)c >= 128)) return false;
+    }
+    return true;
+}
+bool isAlnumString(const string& str) {
+    if (str.empty()) return false;
+    for (char c : str) {
+        if (!isalnum(c)) return false;
+    }
+    return true;
+}
+bool kiemTraTrung(Node* head, const string& ten, long long id, const string& maBN, bool& trungTen, bool& trungID, bool& trungMa) {
+    trungTen = trungID = trungMa = false;
+    Node* current = head;
+    while(current) {
+        if(current->data.hoTen == ten) trungTen = true;
+        if(current->data.id == id) trungID = true;
+        if(current->data.maBenhNhan == maBN) trungMa = true;
+        current = current->next;
+    }
+    return trungTen || trungID || trungMa;
+}
 void nhapThongTinBenhNhan(BenhNhan &bn, Node* head, bool kiemTraTrungLap = true, long long idCu = -1) {
     bool trungTen, trungID, trungMa;
     string input;
@@ -152,28 +185,6 @@ void xuatThongTinBenhNhan(const BenhNhan &bn, int idx = -1) {
     cout << "Luu tru: " << (bn.luuTru ? "true" : "false") << endl;
     cout << "----------------------\n";
 }
-bool isPositiveInteger(const string& str) {
-    if (str.empty()) return false;
-    for (char c : str) {
-        if (!isdigit(c)) return false;
-    }
-    if (str.length() > 1 && str[0] == '0') return false;
-    return stoll(str) > 0;
-}
-bool isAlphaSpace(const string& str) {
-    if (str.empty()) return false;
-    for (char c : str) {
-        if (!(isalpha(c) || c == ' ' || (unsigned char)c >= 128)) return false;
-    }
-    return true;
-}
-bool isAlnumString(const string& str) {
-    if (str.empty()) return false;
-    for (char c : str) {
-        if (!isalnum(c)) return false;
-    }
-    return true;
-}
 void inDanhSach(Node* head) {
     int idx = 1;
     if (!head) {
@@ -184,17 +195,6 @@ void inDanhSach(Node* head) {
         xuatThongTinBenhNhan(head->data, idx++);
         head = head->next;
     }
-}
-bool kiemTraTrung(Node* head, const string& ten, long long id, const string& maBN, bool& trungTen, bool& trungID, bool& trungMa) {
-    trungTen = trungID = trungMa = false;
-    Node* current = head;
-    while(current) {
-        if(current->data.hoTen == ten) trungTen = true;
-        if(current->data.id == id) trungID = true;
-        if(current->data.maBenhNhan == maBN) trungMa = true;
-        current = current->next;
-    }
-    return trungTen || trungID || trungMa;
 }
 void addPatientAtPosition(Node*& head, Node*& tail, int position) {
     BenhNhan bn;
