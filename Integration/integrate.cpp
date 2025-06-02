@@ -837,13 +837,17 @@ void timKiemBenhNhan() {
             for (int i = 0; i < soLuong; i++) {
                 if (danhSach[i].id == id) {
                     printf("Tim thay: %s | Tuoi: %d | Dia chi: %s | Gioi Tinh: %s | Ma benh nhan: %s | Tien su benh an: %s | Luu Tru: %d\n",
-                        danhSach[i].hoTen,
+                        danhSach[i].hoTen.c_str(),
                         danhSach[i].tuoi,
-                        danhSach[i].diaChi,
-                        danhSach[i].GioiTinh,
-                        danhSach[i].maBenhNhan,
-                        danhSach[i].TienSuBenhAn,
+                        danhSach[i].diaChi.c_str(),
+                        danhSach[i].GioiTinh.c_str(),
+                        danhSach[i].maBenhNhan.c_str(),
+                        danhSach[i].TienSuBenhAn.c_str(),
                         danhSach[i].luuTru);
+                    break;
+                }
+                if(i+1 == soLuong) {
+                    printf("Khong tim thay!\n");
                     break;
                 }
             }
@@ -856,13 +860,17 @@ void timKiemBenhNhan() {
             for (int i = 0; i < soLuong; i++) {
                 if (danhSach[i].hoTen == hoTen) {
                     printf("Tim thay: %s | Tuoi: %d | Dia chi: %s | Gioi Tinh: %s | Ma benh nhan: %s | Tien su benh an: %s | Luu Tru: %d\n",
-                        danhSach[i].hoTen,
+                        danhSach[i].hoTen.c_str(),
                         danhSach[i].tuoi,
-                        danhSach[i].diaChi,
-                        danhSach[i].GioiTinh,
-                        danhSach[i].maBenhNhan,
-                        danhSach[i].TienSuBenhAn,
+                        danhSach[i].diaChi.c_str(),
+                        danhSach[i].GioiTinh.c_str(),
+                        danhSach[i].maBenhNhan.c_str(),
+                        danhSach[i].TienSuBenhAn.c_str(),
                         danhSach[i].luuTru);
+                    break;
+                }
+                if(i+1 == soLuong) {
+                    printf("Khong tim thay!\n");
                     break;
                 }
             }
@@ -876,6 +884,10 @@ void timKiemBenhNhan() {
         //             printf("Tim thay: ID %d | Ten: %s | Tuoi: %d | Dia chi: %s | Uu tien: %d\n",
         //                 danhSach[i].id, danhSach[i].hoTen, danhSach[i].tuoi,
         //                 danhSach[i].diaChi, danhSach[i].mucDoUuTien);
+        //             break;
+        //         }
+        //         if(i+1 == soLuong) {
+        //             printf("Khong tim thay!\n");
         //             break;
         //         }
         //     }
