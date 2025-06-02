@@ -1,0 +1,10 @@
+1001,Nguyen Van A,30,Ha Noi,nam,BNA001,Tieu duong,1
+1002,Tran Thi B,45,Da Nang,nu,BNA002,Huyet ap cao,0
+1003,Le Van C,60,Hai Phong,nam,BNA003,Tim mach,1
+1004,Pham Thi D,28,Ho Chi Minh,nu,BNA004,Hen suyen,1
+1005,Hoang Van E,35,Binh Duong,nam,BNA005,Viem gan,0
+1006,Do Thi F,50,Can Tho,nu,BNA006,Da lieu,1
+1007,Vo Van G,41,Nha Trang,nam,BNA007,Tieu duong,0
+1008,Ly Thi H,33,Da Lat,nu,BNA008,Tim mach,1
+1009,Nguyen Van I,70,Quang Ninh,nam,BNA009,Huyet ap cao,1
+1010,Trinh Thi J,25,Phu Yen,nu,BNA010,Cam cum,0

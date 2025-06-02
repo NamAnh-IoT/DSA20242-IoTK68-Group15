@@ -1,0 +1,10 @@
+1,Nguyen Van A,30,123 Le Loi,Phong 101,2
+2,Tran Thi B,45,456 Tran Hung Dao,Phong 102,3
+3,Le Van C,60,789 Cach Mang Thang 8,Phong 103,1
+4,Pham Thi D,50,111 Nguyen Trai,Phong 104,2
+5,Hoang Van E,35,222 Hai Ba Trung,Phong 105,1
+6,Do Thi F,28,333 Dien Bien Phu,Phong 106,3
+7,Nguyen Van G,70,444 Vo Thi Sau,Phong 107,2
+8,Tran Van H,40,555 Xo Viet Nghe Tinh,Phong 108,1
+9,Le Thi I,65,666 Nguyen Dinh Chieu,Phong 109,3
+10,Pham Van K,55,777 Nguyen Van Cu,Phong 110,2
