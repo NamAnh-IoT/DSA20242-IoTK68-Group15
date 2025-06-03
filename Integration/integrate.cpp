@@ -978,6 +978,152 @@ void sapXepBenhNhan() {
     } while (chon != 0);
 }
 
+void runPatientManagement(){
+    Node* head = nullptr;
+    Node* tail = nullptr;
+    int choice;
+    do {
+
+     printf("\n===== MENU QUẢN LÍ BỆNH NHÂN =====\n");
+        printf("1. Thêm bệnh nhân vào đầu danh sách\n");
+        printf("2. Thêm bệnh nhân vào cuối danh sách\n");
+        printf("3. Thêm bệnh nhân vào vị trí bất kỳ\n");
+        printf("4. Xóa bệnh nhân\n");
+        printf("5. Tìm kiếm bệnh nhân\n");
+        printf("6. Cập nhật thông tin bệnh nhân\n");
+        printf("7. Hiện thị thông tin bệnh nhân\n");
+        printf("0. Thoát\n");
+        printf("Hãy đưa ra lựa chọn: ");
+        scanf("%d", &choice);
+         switch (choice) {
+            case 1: {
+                BenhNhan bn;
+                nhapThongTinBenhNhan(bn, head, true);
+                addFirst(head, tail, bn);
+                 printf("Đã thêm vào danh sách !.\n");   
+                break;
+            }
+            case 2: {
+                BenhNhan bn;
+                nhapThongTinBenhNhan(bn, head, true);
+                addLast(head, tail, bn);
+                 printf("Đã thêm vào danh sách !.\n");   
+                break;
+            }
+            case 3: {
+                int position;
+                 printf("Nhập vị trí cần thêm (bắt đầu từ 0): ");
+                scanf("%d", &position);
+                addPatientAtPosition(head, tail, position);
+                break;
+            }
+            case 4:
+                removePatient(head, tail);
+                break;
+            case 5:
+                searchPatient(head);
+                break;
+            case 6:
+                UpdatePatient(head);
+                break;
+            case 7:
+                inDanhSach(head);
+                break;
+            case 0:
+                 printf("Thoát chương trình quản lí bệnh nhân.\n");
+                break;
+            default:
+                 printf("Lựa chọn không hợp lệ !\n");
+        }
+} while (choice != 0);
+}
+
+void hospitalMenu() {
+    int choice;
+    do {
+        printf("\n========= MENU QUẢN LÝ BỆNH VIỆN =========\n");
+        printf("1. Xem báo cáo bệnh viện\n");
+        printf("2. Xem thông tin phòng\n");
+        printf("3. Thêm y tá cho phòng\n");
+        printf("4. Xóa y tá khỏi phòng\n");
+        printf("5. Xem danh sách y tá của phòng\n");
+        printf("0. Thoát\n");
+        printf("Chọn chức năng: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printHospitalReport(hospital);
+                break;
+            case 2: {
+                int roomIndex;
+                printf("Nhập chỉ số phòng (0-%d): ", TOTAL_ROOMS - 1);
+                scanf("%d", &roomIndex);
+                getchar();
+                if (roomIndex >= 0 && roomIndex < TOTAL_ROOMS) {
+                    printRoomInfo(&hospital[roomIndex]);
+                } else {
+                    printf("Chỉ số phòng không hợp lệ!\n");
+                }
+                break;
+            }
+            case 3: {
+                int roomIndex;
+                printf("Nhập chỉ số phòng (0-%d): ", TOTAL_ROOMS - 1);
+                scanf("%d", &roomIndex);
+                getchar();
+                if (roomIndex >= 0 && roomIndex < TOTAL_ROOMS) {
+                    Nurse nurse;
+                    printf("Nhập tên y tá: ");
+                    fgets(nurse.name, sizeof(nurse.name), stdin);
+                    nurse.name[strcspn(nurse.name, "\n")] = 0;
+                    printf("Nhập ca trực: ");
+                    fgets(nurse.shift, sizeof(nurse.shift), stdin);
+                    nurse.shift[strcspn(nurse.shift, "\n")] = 0;
+                    addNurse(&hospital[roomIndex], nurse);
+                } else {
+                    printf("Chỉ số phòng không hợp lệ!\n");
+                }
+                break;
+            }
+            case 4: {
+                int roomIndex;
+                printf("Nhập chỉ số phòng (0-%d): ", TOTAL_ROOMS - 1);
+                scanf("%d", &roomIndex);
+                getchar();
+                if (roomIndex >= 0 && roomIndex < TOTAL_ROOMS) {
+                    char name[100];
+                    printf("Nhập tên y tá cần xóa: ");
+                    fgets(name, sizeof(name), stdin);
+                    name[strcspn(name, "\n")] = 0;
+                    deleteNurse(&hospital[roomIndex], name);
+                } else {
+                    printf("Chỉ số phòng không hợp lệ!\n");
+                }
+                break;
+            }
+            case 5: {
+                int roomIndex;
+                printf("Nhập chỉ số phòng (0-%d): ", TOTAL_ROOMS - 1);
+                scanf("%d", &roomIndex);
+                getchar();
+                if (roomIndex >= 0 && roomIndex < TOTAL_ROOMS) {
+                    printNurses(&hospital[roomIndex]);
+                } else {
+                    printf("Chỉ số phòng không hợp lệ!\n");
+                }
+                break;
+            }
+            case 0:
+                printf("Thoát menu quản lý bệnh viện.\n");
+                break;
+            default:
+                printf("Lựa chọn không hợp lệ!\n");
+                break;
+        }
+    } while (choice != 0);
+}
+
 huoc danhSachThuoc[MAX_THUOC];
     int soLuongThuoc = 0;
     int luaChon;
@@ -1029,11 +1175,16 @@ huoc danhSachThuoc[MAX_THUOC];
 
 int main() {
     docDuLieuTuFile(); // Đọc dữ liệu khi bắt đầu
-
-    int chon;
+     int mainChoice;
     do {
-        printf("\n===== MENU =====\n");
-        printf("1. Hien thi danh sach benh nhan\n");
+        printf("\n===== MENU CHUONG TRINH CHINH =====\n");
+        printf("1. Quan ly benh nhan\n");
+        printf("2. Quan ly bac si\n");
+        printf("3. Quan ly thuoc\n");
+        printf("0. Thoat chuong trinh\n");
+        printf("Hay Dua Ra Lua Chon: ");
+        scanf("%d", &mainChoice);
+       /* printf("1. Hien thi danh sach benh nhan\n");
         printf("2. Them benh nhan\n");
         printf("3. Sua thong tin benh nhan\n");
         printf("4. Xoa thong tin benh nhan\n");
@@ -1041,10 +1192,15 @@ int main() {
         printf("6. Sap xep danh sach benh nhan\n");
         printf("0. Thoat chuong trinh\n");
         printf("Chon: ");
-        scanf("%d", &chon);
-        switch (chon) {
-            case 1: hienThiDanhSach(); break;
-            // case 2: themBenhNhan(); break;
+        scanf("%d", &chon);*/
+
+        switch (mainChoice) {
+            case 1: 
+            runPatientManagement(); 
+            break;
+            case 2: 
+            hospitalMenu(); 
+            break;
             // case 3: suaBenhNhan(); break;
             // case 4: xoaBenhNhan(); break;
             case 5: timKiemBenhNhan(); break;
