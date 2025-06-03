@@ -978,6 +978,53 @@ void sapXepBenhNhan() {
     } while (chon != 0);
 }
 
+huoc danhSachThuoc[MAX_THUOC];
+    int soLuongThuoc = 0;
+    int luaChon;
+    do {
+        printf("\n===== QUAN LY THUOC =====\n");
+        printf("1. Them thuoc\n");
+        printf("2. Xoa thuoc theo ID\n");
+        printf("3. Chinh sua thuoc theo ID\n");
+        printf("4. Xem danh sach thuoc\n");
+        printf("0. Thoat\n");
+        printf("Chon chuc nang: ");
+        scanf("%d", &luaChon);
+        getchar();
+
+        switch (luaChon) {
+            case 1:
+                themThuoc(danhSachThuoc, &soLuongThuoc);
+                break;
+            case 2:
+                xoaThuocTheoID(danhSachThuoc, &soLuongThuoc);
+                break;
+            case 3:
+                chinhSuaThuocTheoID(danhSachThuoc, soLuongThuoc);
+                break;
+            case 4:
+                printf("\n%-10s %-20s %-10s %-10s %-10s %-15s\n", "ID", "Ten", "Don Vi", "So Luong", "Gia", "Han SD");
+                for (int i = 0; i < soLuongThuoc; i++) {
+                    printf("%-10s %-20s %-10s %-10d %-10.2lf %-15s\n",
+                        danhSachThuoc[i].id,
+                        danhSachThuoc[i].ten,
+                        danhSachThuoc[i].donVi,
+                        danhSachThuoc[i].soLuong,
+                        danhSachThuoc[i].gia,
+                        danhSachThuoc[i].hanSuDung
+                    );
+                }
+                break;
+            case 0:
+                printf("Thoat chuong trinh quan ly thuoc.\n");
+                break;
+            default:
+                printf("Lua chon khong hop le!\n");
+        }
+    } while (luaChon != 0);
+
+    return 0;
+}
 // ========================== HÀM MAIN ==========================
 
 int main() {
