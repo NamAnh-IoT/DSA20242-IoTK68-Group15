@@ -91,6 +91,7 @@ void nhapThongTinBenhNhan(BenhNhan &bn, Node* head, bool kiemTraTrungLap = true,
     string input;
     do {
         cout << "ID: ";
+        cin.ignore(); //bỏ kí tự \n
         getline(cin, input);
         if (!isPositiveInteger(input)) {
             cout << "ID phải là số nguyên dương!\n";
@@ -759,66 +760,128 @@ int soLuong = 0;
 #include <fstream>
 #include <sstream>
 
-void docDuLieuTuFile() {
+// void docDuLieuTuFile() {
+//     ifstream file("benhnhan_new.txt");
+//     if (!file) {
+//         file.open("benhnhan_old.txt");
+//         if (!file) {
+//             cout << "Khong tim thay file du lieu.\n";
+//             return;
+//         }
+//     }
+
+//     soLuong = 0;
+//     string line;
+//     while (getline(file, line)) {
+//         stringstream ss(line);
+//         string idStr, tuoiStr, luuTruStr;
+
+//         getline(ss, idStr, ',');
+//         getline(ss, danhSach[soLuong].hoTen, ',');
+//         getline(ss, tuoiStr, ',');
+//         getline(ss, danhSach[soLuong].diaChi, ',');
+//         getline(ss, danhSach[soLuong].GioiTinh, ',');
+//         getline(ss, danhSach[soLuong].maBenhNhan, ',');
+//         getline(ss, danhSach[soLuong].TienSuBenhAn, ',');
+//         getline(ss, luuTruStr, '\n');
+
+//         danhSach[soLuong].id = stoll(idStr);
+//         danhSach[soLuong].tuoi = stoi(tuoiStr);
+//         danhSach[soLuong].luuTru = (luuTruStr == "1");
+
+//         soLuong++;
+//         if (soLuong >= MAX) break;
+//     }
+
+//     file.close();
+//     cout << "Da nap " << soLuong << " benh nhan tu file.\n";
+// }
+
+
+void docDuLieuTuFile(Node*& head, Node*& tail) {
     ifstream file("benhnhan_new.txt");
     if (!file) {
         file.open("benhnhan_old.txt");
         if (!file) {
-            cout << "Khong tim thay file du lieu.\n";
+            cout << "Không tìm thấy file dữ liệu.\n";
             return;
         }
     }
 
-    soLuong = 0;
     string line;
     while (getline(file, line)) {
         stringstream ss(line);
         string idStr, tuoiStr, luuTruStr;
+        BenhNhan bn;
 
         getline(ss, idStr, ',');
-        getline(ss, danhSach[soLuong].hoTen, ',');
+        getline(ss, bn.hoTen, ',');
         getline(ss, tuoiStr, ',');
-        getline(ss, danhSach[soLuong].diaChi, ',');
-        getline(ss, danhSach[soLuong].GioiTinh, ',');
-        getline(ss, danhSach[soLuong].maBenhNhan, ',');
-        getline(ss, danhSach[soLuong].TienSuBenhAn, ',');
+        getline(ss, bn.diaChi, ',');
+        getline(ss, bn.GioiTinh, ',');
+        getline(ss, bn.maBenhNhan, ',');
+        getline(ss, bn.TienSuBenhAn, ',');
         getline(ss, luuTruStr, '\n');
 
-        danhSach[soLuong].id = stoll(idStr);
-        danhSach[soLuong].tuoi = stoi(tuoiStr);
-        danhSach[soLuong].luuTru = (luuTruStr == "1");
+        bn.id = stoll(idStr);
+        bn.tuoi = stoi(tuoiStr);
+        bn.luuTru = (luuTruStr == "1");
 
-        soLuong++;
-        if (soLuong >= MAX) break;
+        addLast(head, tail, bn);
     }
 
     file.close();
-    cout << "Da nap " << soLuong << " benh nhan tu file.\n";
+    cout << "Đã nạp dữ liệu bệnh nhân vào hàng đợi từ file.\n";
 }
 
 
+// void ghiDuLieuRaFile() {
+//     ofstream file("benhnhan_new.txt");
+//     if (!file) {
+//         cout << "Khong the mo file de ghi.\n";
+//         return;
+//     }
 
-void ghiDuLieuRaFile() {
+//     for (int i = 0; i < soLuong; i++) {
+//         file << danhSach[i].id << ","
+//              << danhSach[i].hoTen << ","
+//              << danhSach[i].tuoi << ","
+//              << danhSach[i].diaChi << ","
+//              << danhSach[i].GioiTinh << ","
+//              << danhSach[i].maBenhNhan << ","
+//              << danhSach[i].TienSuBenhAn << ","
+//              << danhSach[i].luuTru << "\n";
+//     }
+
+//     file.close();
+//     cout << "Da luu danh sach vao file benhnhan_new.txt\n";
+// }
+
+void ghiDuLieuRaFile(Node* head) {
     ofstream file("benhnhan_new.txt");
     if (!file) {
-        cout << "Khong the mo file de ghi.\n";
+        cout << "Không thể mở file để ghi.\n";
         return;
     }
 
-    for (int i = 0; i < soLuong; i++) {
-        file << danhSach[i].id << ","
-             << danhSach[i].hoTen << ","
-             << danhSach[i].tuoi << ","
-             << danhSach[i].diaChi << ","
-             << danhSach[i].GioiTinh << ","
-             << danhSach[i].maBenhNhan << ","
-             << danhSach[i].TienSuBenhAn << ","
-             << danhSach[i].luuTru << "\n";
+    Node* current = head;
+    while (current) {
+        const BenhNhan& bn = current->data;
+        file << bn.id << ","
+             << bn.hoTen << ","
+             << bn.tuoi << ","
+             << bn.diaChi << ","
+             << bn.GioiTinh << ","
+             << bn.maBenhNhan << ","
+             << bn.TienSuBenhAn << ","
+             << (bn.luuTru ? "1" : "0") << "\n";
+        current = current->next;
     }
 
     file.close();
-    cout << "Da luu danh sach vao file benhnhan_new.txt\n";
+    cout << "Đã lưu danh sách bệnh nhân từ hàng đợi vào file benhnhan_new.txt\n";
 }
+
 
 //------------------------------------------------------------------
 
@@ -981,6 +1044,8 @@ void sapXepBenhNhan() {
 void runPatientManagement(){
     Node* head = nullptr;
     Node* tail = nullptr;
+    docDuLieuTuFile(head, tail);
+
     int choice;
     do {
 
@@ -991,7 +1056,7 @@ void runPatientManagement(){
         printf("4. Xóa bệnh nhân\n");
         printf("5. Tìm kiếm bệnh nhân\n");
         printf("6. Cập nhật thông tin bệnh nhân\n");
-        printf("7. Hiện thị thông tin bệnh nhân\n");
+        printf("7. Hiển thị thông tin bệnh nhân\n");
         printf("0. Thoát\n");
         printf("Hãy đưa ra lựa chọn: ");
         scanf("%d", &choice);
@@ -1036,9 +1101,12 @@ void runPatientManagement(){
                  printf("Lựa chọn không hợp lệ !\n");
         }
 } while (choice != 0);
+
+ghiDuLieuRaFile(head);
+
 }
 
-void hospitalMenu() {
+void runHospitalMenu(Room hospital[]) {
     int choice;
     do {
         printf("\n========= MENU QUẢN LÝ BỆNH VIỆN =========\n");
@@ -1123,10 +1191,10 @@ void hospitalMenu() {
         }
     } while (choice != 0);
 }
-
-huoc danhSachThuoc[MAX_THUOC];
+void runQuanLyThuoc() {
+    Thuoc danhSachThuoc[MAX_THUOC];
     int soLuongThuoc = 0;
-    int luaChon;
+    int choice;
     do {
         printf("\n===== QUAN LY THUOC =====\n");
         printf("1. Them thuoc\n");
@@ -1135,10 +1203,10 @@ huoc danhSachThuoc[MAX_THUOC];
         printf("4. Xem danh sach thuoc\n");
         printf("0. Thoat\n");
         printf("Chon chuc nang: ");
-        scanf("%d", &luaChon);
+        scanf("%d", &choice);
         getchar();
 
-        switch (luaChon) {
+        switch (choice) {
             case 1:
                 themThuoc(danhSachThuoc, &soLuongThuoc);
                 break;
@@ -1167,14 +1235,15 @@ huoc danhSachThuoc[MAX_THUOC];
             default:
                 printf("Lua chon khong hop le!\n");
         }
-    } while (luaChon != 0);
-
-    return 0;
+    } while (choice != 0);
 }
 // ========================== HÀM MAIN ==========================
 
 int main() {
-    docDuLieuTuFile(); // Đọc dữ liệu khi bắt đầu
+    // docDuLieuTuFile(); // Đọc dữ liệu khi bắt đầu
+
+
+    Room hospital[TOTAL_ROOMS];
      int mainChoice;
     do {
         printf("\n===== MENU CHUONG TRINH CHINH =====\n");
@@ -1184,34 +1253,24 @@ int main() {
         printf("0. Thoat chuong trinh\n");
         printf("Hay Dua Ra Lua Chon: ");
         scanf("%d", &mainChoice);
-       /* printf("1. Hien thi danh sach benh nhan\n");
-        printf("2. Them benh nhan\n");
-        printf("3. Sua thong tin benh nhan\n");
-        printf("4. Xoa thong tin benh nhan\n");
-        printf("5. Tim kiem benh nhan\n");
-        printf("6. Sap xep danh sach benh nhan\n");
-        printf("0. Thoat chuong trinh\n");
-        printf("Chon: ");
-        scanf("%d", &chon);*/
-
+        getchar(); // Đọc ký tự newline còn lại trong bộ đệm
         switch (mainChoice) {
             case 1: 
             runPatientManagement(); 
             break;
             case 2: 
-            hospitalMenu(); 
+            runHospitalMenu(hospital); 
             break;
-            // case 3: suaBenhNhan(); break;
-            // case 4: xoaBenhNhan(); break;
-            case 5: timKiemBenhNhan(); break;
-            case 6: sapXepBenhNhan(); break;
+            case 3: 
+            runQuanLyThuoc(); 
+            break;
             case 0:
-                ghiDuLieuRaFile(); // Ghi dữ liệu khi thoát
+                // ghiDuLieuRaFile(); // Ghi dữ liệu khi thoát
                 printf("Ket thuc chuong trinh.\n");
                 break;
             default: printf("Lua chon khong hop le.\n");
         }
-    } while (chon != 0);
+    } while (mainChoice != 0);
 
     return 0;
-}
+}//test đi
