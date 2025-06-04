@@ -8,4 +8,4 @@
 7,Nguyen Van G,70,444 Vo Thi Sau,Phong 107,2,,0
 8,Tran Van H,40,555 Xo Viet Nghe Tinh,Phong 108,1,,0
 9,Le Thi I,65,666 Nguyen Dinh Chieu,Phong 109,3,,0
-    10,Pham Van K,55,777 Nguyen Van Cu,Phong 110,2,,0
+10,Pham Van K,55,777 Nguyen Van Cu,Phong 110,2,,0

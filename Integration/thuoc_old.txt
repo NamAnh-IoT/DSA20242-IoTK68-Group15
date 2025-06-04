@@ -1,0 +1,10 @@
+01,Paracetamol,vien,100,1500,25,5,2026
+02,Amoxicillin,vien,50,2000,25,5,2026
+03,Ibuprofen,vien,80,1800,12,9,2025
+04,Cetirizine,vien,60,1700,30,10,2026
+05,Vitamin C,lo,40,25000,1,1,2027
+06,Azithromycin,vien,30,3500,20,12,2025
+07,Omeprazole,vien,70,2200,5,6,2026
+08,Metronidazole,vien,90,1900,14,7,2025
+09,Loratadine,vien,55,1600,28,2,2027
+10,Dextromethorphan,lo,35,30000,11,11,2025

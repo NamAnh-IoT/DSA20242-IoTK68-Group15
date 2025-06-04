@@ -1,0 +1,22 @@
+RoomType:S
+NurseName:Nguyen Thi A
+Shift:Ca sang
+NurseName:Tran Van B
+Shift:Ca chieu
+RoomType:A
+NurseName:Do Van H
+Shift:Ca chieu
+NurseName:Hoang Thi E
+Shift:Ca sang
+NurseName:Le Thi C
+Shift:Ca toi
+NurseName:Nguyen Thi G
+Shift:Ca sang
+NurseName:Nguyen Van J
+Shift:Ca sang
+NurseName:Pham Thi I
+Shift:Ca dem
+NurseName:Pham Van D
+Shift:Ca sang
+NurseName:Vo Van F
+Shift:Ca toi

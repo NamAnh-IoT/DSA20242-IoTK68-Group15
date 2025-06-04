@@ -4,6 +4,9 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <cstdlib>
+#include <fstream>
+#include <sstream>
 
 
 using namespace std;
@@ -53,28 +56,37 @@ void addLast(Node*& head, Node*& tail, BenhNhan& bn) {
     }
     tail = node;
 }
+//Hàm kiểm tra ký tự có phải là số nguyên dương không
 bool isPositiveInteger(const string& str) {
     if (str.empty()) return false;
     for (char c : str) {
+        //char c:str là ký tự trong chuỗi str
         if (!isdigit(c)) return false;
+        //isdigit(c) chỉ trả về true nếu c là ký tự số từ '0' đến '9'
     }
     if (str.length() > 1 && str[0] == '0') return false;
     return stoll(str) > 0;
+    //stoll(str) chuyển đổi chuỗi str thành số nguyên dài long long
 }
+//Hàm kiểm tra chuỗi có phải là chữ cái và dấu cách không
 bool isAlphaSpace(const string& str) {
     if (str.empty()) return false;
     for (char c : str) {
         if (!(isalpha(c) || c == ' ' || (unsigned char)c >= 128)) return false;
+        //isalpha(c) kiểm tra xem c có phải là chữ cái không
     }
     return true;
 }
+//Hàm kiểm tra chuỗi có phải là chuỗi chữ và số không
 bool isAlnumString(const string& str) {
     if (str.empty()) return false;
     for (char c : str) {
         if (!isalnum(c)) return false;
+        //isalnum(c) kiểm tra xem c có phải là chữ cái hoặc số không
     }
     return true;
 }
+//Hàm kiểm tra chuỗi có phải là chuỗi chữ và số không (không có dấu cách hoặc ký tự đặc biệt)
 bool kiemTraTrung(Node* head, const string& ten, long long id, const string& maBN, bool& trungTen, bool& trungID, bool& trungMa) {
     trungTen = trungID = trungMa = false;
     Node* current = head;
@@ -86,12 +98,13 @@ bool kiemTraTrung(Node* head, const string& ten, long long id, const string& maB
     }
     return trungTen || trungID || trungMa;
 }
+//Hàm nhập thông tin bệnh nhân
 void nhapThongTinBenhNhan(BenhNhan &bn, Node* head, bool kiemTraTrungLap = true, long long idCu = -1) {
     bool trungTen, trungID, trungMa;
     string input;
     do {
         cout << "ID: ";
-        cin.ignore(); //bỏ kí tự \n
+        cin.ignore();
         getline(cin, input);
         if (!isPositiveInteger(input)) {
             cout << "ID phải là số nguyên dương!\n";
@@ -179,6 +192,7 @@ void nhapThongTinBenhNhan(BenhNhan &bn, Node* head, bool kiemTraTrungLap = true,
         break;
     } while (true);
 }
+//Hàm xuất thông tin bệnh nhân
 void xuatThongTinBenhNhan(const BenhNhan &bn, int idx = -1) {
     if (idx > 0) cout << "Benh nhan " << idx << ":\n";
     cout << "ID: " << bn.id << endl;
@@ -191,6 +205,7 @@ void xuatThongTinBenhNhan(const BenhNhan &bn, int idx = -1) {
     cout << "Luu tru: " << (bn.luuTru ? "true" : "false") << endl;
     cout << "----------------------\n";
 }
+//Hàm in danh sách bệnh nhân
 void inDanhSach(Node* head) {
     int idx = 1;
     if (!head) {
@@ -202,6 +217,7 @@ void inDanhSach(Node* head) {
         head = head->next;
     }
 }
+//Hàm thêm bệnh nhân
 void addPatientAtPosition(Node*& head, Node*& tail, int position) {
     BenhNhan bn;
     nhapThongTinBenhNhan(bn, head, true); 
@@ -233,12 +249,14 @@ void addPatientAtPosition(Node*& head, Node*& tail, int position) {
     cout << "\nDanh sach sau khi them:\n";
     inDanhSach(head);
 }
+//Filler cho điều kiện xóa bệnh nhân
 struct DieuKienXoa {
     long long id = -1;
     string ten = "";
     string gioiTinh = "";
     string tienSu = "";
 };
+// Hàm nhập điều kiện xóa bệnh nhân
 void nhapDieuKienXoa(int luaChon, DieuKienXoa &dk) {
     string input;
     if (luaChon == 1 || luaChon == 5) {
@@ -276,6 +294,7 @@ void nhapDieuKienXoa(int luaChon, DieuKienXoa &dk) {
         } while (!isAlphaSpace(dk.tienSu));
     }
 }
+//đối chiếu điều kiện xóa bệnh nhân với từng node trong danh sách
 bool kiemTraNodeCanXoa(const BenhNhan& bn, int luaChon, const DieuKienXoa& dk) {
     if ((luaChon == 1 || luaChon == 5) && bn.id != dk.id) return false;
     if ((luaChon == 2 || luaChon == 5) && bn.hoTen != dk.ten) return false;
@@ -283,6 +302,7 @@ bool kiemTraNodeCanXoa(const BenhNhan& bn, int luaChon, const DieuKienXoa& dk) {
     if ((luaChon == 4 || luaChon == 5) && bn.TienSuBenhAn != dk.tienSu) return false;
     return true;
 }
+// Hàm xóa bệnh nhân theo điều kiện
 void removePatient(Node*& head, Node*& tail) {
     if (!head) {
         cout << "Danh sách bệnh nhân trống! Thao tác vô hiệu!\n";
@@ -340,12 +360,14 @@ void removePatient(Node*& head, Node*& tail) {
         inDanhSach(head);
     }
 }
+//Filler cho điều kiện tìm kiếm bệnh nhân
 struct DieuKienTimKiem {
     string ten = "";
     int tuoi = -1;
     string gioiTinh = "";
     string diaChi = "";
 };
+// Hàm nhập điều kiện tìm kiếm bệnh nhân
 void nhapDieuKienTimKiem(int luaChon, DieuKienTimKiem& dk) {
     string input;
     if (luaChon == 1 || luaChon == 5) {
@@ -383,6 +405,7 @@ void nhapDieuKienTimKiem(int luaChon, DieuKienTimKiem& dk) {
         } while (!isAlphaSpace(dk.diaChi));
     }
 }
+// Hàm kiểm tra điều kiện tìm kiếm bệnh nhân với từng node trong danh sách
 bool kiemTraNodeTimKiem(const BenhNhan& bn, int luaChon, const DieuKienTimKiem& dk) {
     if ((luaChon == 1 || luaChon == 5) && bn.hoTen != dk.ten) return false;
     if ((luaChon == 2 || luaChon == 5) && bn.tuoi != dk.tuoi) return false;
@@ -390,6 +413,7 @@ bool kiemTraNodeTimKiem(const BenhNhan& bn, int luaChon, const DieuKienTimKiem& 
     if ((luaChon == 4 || luaChon == 5) && bn.diaChi != dk.diaChi) return false;
     return true;
 }
+// Hàm tìm kiếm bệnh nhân theo điều kiện
 void searchPatient(Node* head) {
     if (!head) {
         cout << "Danh sách bệnh nhân trống!\n";
@@ -429,6 +453,7 @@ void searchPatient(Node* head) {
         delete temp;
     }
 }
+// Hàm cập nhật thông tin bệnh nhân, điều kiện không trùng thông tin cũ và kiểm tra điều kiện trùng lặp
 void capNhatThongTinBenhNhan(BenhNhan &bn, Node* head) {
     string input;
     bool trungTen, trungID, trungMa;
@@ -473,6 +498,7 @@ void capNhatThongTinBenhNhan(BenhNhan &bn, Node* head) {
         else if (input == "0") bn.luuTru = false;
     }
 }
+// Hàm cập nhật thông tin bệnh nhân theo ID
 void UpdatePatient(Node* head) {
     if (!head) {
         cout << "Danh sách bệnh nhân trống!\n";
@@ -509,30 +535,75 @@ void UpdatePatient(Node* head) {
 }
 
 //================================================== Tùng béo ==================================================
+
+// Hospital Management System - Optimized with patient and nurse BST + room classification
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+
 #define MAX 100
 #define TOTAL_ROOMS 52
 #define MAX_NURSES_PER_ROOM 2
+#define TYPE_COUNT 5
 
+// ======================= Structs =========================
+typedef struct {
+    int id;
+    char cccd[20];
+    char name[100];
+    int age;
+    char state[200];
+    char history[50];
+    int priority;
+} Patient;
+
+typedef struct PatientNode {
+    Patient data;
+    struct PatientNode* left;
+    struct PatientNode* right;
+} PatientNode;
 
 typedef struct {
     char name[100];
     char shift[50];
 } Nurse;
 
+typedef struct NurseNode {
+    Nurse data;
+    struct NurseNode* left;
+    struct NurseNode* right;
+} NurseNode;
+
 typedef struct {
-    BenhNhan patients[MAX];
+    PatientNode* patientRoot;
     int patientCount;
 
-    Nurse nurses[MAX_NURSES_PER_ROOM];
+    NurseNode* nurseRoot;
     int nurseCount;
 
     char type[2];
     int tier;
 } Room;
 
+// ======================= Globals =========================
 int patientIDCounter = 1;
+Room* roomsByType[TYPE_COUNT][30];
+int roomCountByType[TYPE_COUNT];
 
-//return giá trị luôn rồi thì return MAX là như thế nào?
+// ======================= Utility =========================
+int getTypeIndex(const char* type) {
+    switch (type[0]) {
+    case 'S': return 0;
+    case 'A': return 1;
+    case 'F': return 2;
+    case 'E': return 3;
+    case 'O': return 4;
+    }
+    return -1;
+}
+
 int getMaxPatientsPerRoom(const char* type) {
     if (strcmp(type, "S") == 0) return 2;
     if (strcmp(type, "A") == 0) return 6;
@@ -542,97 +613,128 @@ int getMaxPatientsPerRoom(const char* type) {
     return MAX;
 }
 
-//kiểm tra string có phải string chữ không à?
 int isValidString(const char* str) {
     for (int i = 0; i < strlen(str); i++) {
-        if (!isalnum(str[i]) && str[i] != ' ') {
-            return 0;
-        }
+        if (!isalnum(str[i]) && str[i] != ' ') return 0;
     }
     return 1;
 }
 
-
-//----------------------Hàm liên quan đến Nurse-----------------------------
-
-void addNurse(Room* room, Nurse newNurse) {
-    if (room->nurseCount >= MAX_NURSES_PER_ROOM) {
-        printf("Phòng đã đủ %d y tá, không thể thêm.\n", MAX_NURSES_PER_ROOM);
-        return;
-    }
-    room->nurses[room->nurseCount++] = newNurse;
-    printf("Đã thêm y tá: %s\n", newNurse.name);
+void readLine(char* buffer, int size) {
+    fgets(buffer, size, stdin);
+    buffer[strcspn(buffer, "\n")] = 0;
 }
 
-void deleteNurse(Room* room, const char* name) {
-    for (int i = 0; i < room->nurseCount; i++) {
-        if (strcmp(room->nurses[i].name, name) == 0) {
-            for (int j = i; j < room->nurseCount - 1; j++) {
-                room->nurses[j] = room->nurses[j + 1];
-            }
-            room->nurseCount--;
-            printf("Đã xóa y tá: %s\n", name);
-            return;
-        }
+// ======================= BST Patient Functions =========================
+PatientNode* insertPatient(PatientNode* root, Patient p) {
+    if (!root) {
+        PatientNode* node = (PatientNode*)malloc(sizeof(PatientNode));
+        node->data = p;
+        node->left = node->right = NULL;
+        return node;
     }
-    printf("Không tìm thấy y tá tên: %s\n", name);
+    if (p.id < root->data.id)
+        root->left = insertPatient(root->left, p);
+    else
+        root->right = insertPatient(root->right, p);
+    return root;
 }
 
-void printNurses(const Room* room) {
-    printf("\nDanh sách y tá:\n");
-    for (int i = 0; i < room->nurseCount; i++) {
-        Nurse n = room->nurses[i];
-        printf("%d. %s - Ca trực: %s\n", i + 1, n.name, n.shift);
-    }
+PatientNode* findPatient(PatientNode* root, int id) {
+    if (!root) return NULL;
+    if (id == root->data.id) return root;
+    if (id < root->data.id) return findPatient(root->left, id);
+    return findPatient(root->right, id);
 }
 
+void printPatients(PatientNode* root) {
+    if (!root) return;
+    printPatients(root->left);
+    Patient p = root->data;
+    printf("ID: %d - %s - CCCD: %s - Tuoi: %d - Trang thai: %s - Uu tien: %d\n",
+        p.id, p.name, p.cccd, p.age, p.state, p.priority);
+    printPatients(root->right);
+}
 
-//----------------------Hàm liên quan đến Room-----------------------------
+int countPatients(PatientNode* root) {
+    if (!root) return 0;
+    return 1 + countPatients(root->left) + countPatients(root->right);
+}
+
+// ======================= BST Nurse Functions =========================
+NurseNode* insertNurse(NurseNode* root, Nurse n) {
+    if (!root) {
+        NurseNode* node = (NurseNode*)malloc(sizeof(NurseNode));
+        node->data = n;
+        node->left = node->right = NULL;
+        return node;
+    }
+    if (strcmp(n.name, root->data.name) < 0)
+        root->left = insertNurse(root->left, n);
+    else
+        root->right = insertNurse(root->right, n);
+    return root;
+}
+
+void printNurses(NurseNode* root) {
+    if (!root) return;
+    printNurses(root->left);
+    printf("%s - Ca truc: %s\n", root->data.name, root->data.shift);
+    printNurses(root->right);
+}
+
+NurseNode* findNurse(NurseNode* root, const char* name) {
+    if (!root) return NULL;
+    int cmp = strcmp(name, root->data.name);
+    if (cmp == 0) return root;
+    if (cmp < 0) return findNurse(root->left, name);
+    return findNurse(root->right, name);
+}
+
+// ======================= Room Management =========================
 void initRoom(Room* room, const char* type, int tier) {
     strcpy(room->type, type);
     room->tier = tier;
-    room->patientCount = 0;
     room->nurseCount = 0;
+    room->patientCount = 0;
+    room->patientRoot = NULL;
+    room->nurseRoot = NULL;
 }
 
 void setupHospital(Room hospital[]) {
     int index = 0;
-    for (int i = 0; i < 6; i++) initRoom(&hospital[index++], "S", 5000000);
-    for (int i = 0; i < 12; i++) initRoom(&hospital[index++], "A", 3000000);
-    for (int i = 0; i < 30; i++) initRoom(&hospital[index++], "F", 1000000);
-    for (int i = 0; i < 2; i++) initRoom(&hospital[index++], "E", 0);
-    for (int i = 0; i < 2; i++) initRoom(&hospital[index++], "O", 0);
+    for (int i = 0; i < 6; i++) {
+        initRoom(&hospital[index], "S", 5000000);
+        roomsByType[0][roomCountByType[0]++] = &hospital[index++];
+    }
+    for (int i = 0; i < 12; i++) {
+        initRoom(&hospital[index], "A", 3000000);
+        roomsByType[1][roomCountByType[1]++] = &hospital[index++];
+    }
+    for (int i = 0; i < 30; i++) {
+        initRoom(&hospital[index], "F", 1000000);
+        roomsByType[2][roomCountByType[2]++] = &hospital[index++];
+    }
+    for (int i = 0; i < 2; i++) {
+        initRoom(&hospital[index], "E", 0);
+        roomsByType[3][roomCountByType[3]++] = &hospital[index++];
+    }
+    for (int i = 0; i < 2; i++) {
+        initRoom(&hospital[index], "O", 0);
+        roomsByType[4][roomCountByType[4]++] = &hospital[index++];
+    }
 }
 
-void printRoomInfo(const Room* room) {
-    printf("\n== Thông tin phòng ==\n");
-    printf("Loại phòng: %s-tier\n", room->type);
-    printf("Giá tiền dịch vụ: %d\n", room->tier);
-    printf("Số bệnh nhân: %d/%d\n", room->patientCount, getMaxPatientsPerRoom(room->type));
-    printf("Số y tá: %d/%d\n", room->nurseCount, MAX_NURSES_PER_ROOM);
-}
-
-Room* findAvailableRoom(Room hospital[], const char* type) {
-    for (int i = 0; i < TOTAL_ROOMS; i++) {
-        if (strcmp(hospital[i].type, type) == 0 &&
-            hospital[i].patientCount < getMaxPatientsPerRoom(type)) {
-            return &hospital[i];
-        }
+Room* findAvailableRoom(const char* type) {
+    int t = getTypeIndex(type);
+    if (t == -1) return NULL;
+    for (int i = 0; i < roomCountByType[t]; i++) {
+        Room* r = roomsByType[t][i];
+        if (countPatients(r->patientRoot) < getMaxPatientsPerRoom(type)) return r;
     }
     return NULL;
 }
 
-void printHospitalReport(Room hospital[]) {
-    int totalPatients = 0;
-    long totalRevenue = 0;
-    for (int i = 0; i < TOTAL_ROOMS; i++) {
-        totalPatients += hospital[i].patientCount;
-        totalRevenue += hospital[i].patientCount * hospital[i].tier;
-    }
-    printf("\n===== BÁO CÁO BỆNH VIỆN =====\n");
-    printf("Tổng số bệnh nhân: %d\n", totalPatients);
-    printf("Tổng tiền viện phí (ước tính): %ld VND\n", totalRevenue);
-}
 
 //================================================== Tuấn ==================================================
 #define MAX_THUOC 100
@@ -641,17 +743,20 @@ void printHospitalReport(Room hospital[]) {
 #define MAX_ID 10
 #define MAX_HANSUDUNG 20
 
-//-------------------------- CAU TRUC THUOC --------------------------
+using namespace std;
+
+// ========================== CAU TRUC THUOC ==========================
 typedef struct {
     char id[MAX_ID];
     char ten[MAX_TEN];
     char donVi[MAX_DONVI];
     int soLuong;
     double gia;
-    char hanSuDung[MAX_HANSUDUNG];
+    // char hanSuDung[MAX_HANSUDUNG];
+    unsigned int ngay, thang, nam; //Hạn sử dụng
 } Thuoc;
 
-//-------------------------- HAM THEM THUOC --------------------------
+// ========================== HAM THEM THUOC ==========================
 void themThuoc(Thuoc danhSachThuoc[], int* soLuongThuoc) {
     if (*soLuongThuoc >= MAX_THUOC) {
         printf("Danh sach thuoc da day!\n");
@@ -677,16 +782,17 @@ void themThuoc(Thuoc danhSachThuoc[], int* soLuongThuoc) {
     scanf("%lf", &danhSachThuoc[*soLuongThuoc].gia);
     getchar();
     
-    printf("Nhap han su dung (vi du: 12/2025): ");
-    fgets(danhSachThuoc[*soLuongThuoc].hanSuDung, MAX_HANSUDUNG, stdin);
-    danhSachThuoc[*soLuongThuoc].hanSuDung[strcspn(danhSachThuoc[*soLuongThuoc].hanSuDung, "\n")] = 0;
+    printf("Nhap han su dung (vi du: dd/mm/yyyy): ");
+    // fgets(danhSachThuoc[*soLuongThuoc].hanSuDung, MAX_HANSUDUNG, stdin);
+    scanf("%d/%d/%d", &danhSachThuoc[*soLuongThuoc].ngay, &danhSachThuoc[*soLuongThuoc].thang, &danhSachThuoc[*soLuongThuoc].nam);
+    // danhSachThuoc[*soLuongThuoc].hanSuDung[strcspn(danhSachThuoc[*soLuongThuoc].hanSuDung, "\n")] = 0;
 
 
     (*soLuongThuoc)++;
     printf("Da them thuoc thanh cong!\n");
 }
 
-//-------------------------- HAM TIM VI TRI THEO ID --------------------------
+// ========================== HAM TIM VI TRI THEO ID ==========================
 int timViTriTheoID(Thuoc danhSachThuoc[], int soLuongThuoc, const char* id) {
     for (int i = 0; i < soLuongThuoc; i++) {
         if (strcmp(danhSachThuoc[i].id, id) == 0) {
@@ -696,7 +802,7 @@ int timViTriTheoID(Thuoc danhSachThuoc[], int soLuongThuoc, const char* id) {
     return -1;
 }
 
-//-------------------------- HAM XOA THUOC THEO ID --------------------------
+// ========================== HAM XOA THUOC THEO ID ==========================
 void xoaThuocTheoID(Thuoc danhSachThuoc[], int* soLuongThuoc) {
     char id[MAX_ID];
     printf("Nhap ma thuoc can xoa: ");
@@ -716,17 +822,21 @@ void xoaThuocTheoID(Thuoc danhSachThuoc[], int* soLuongThuoc) {
     printf("Da xoa thuoc thanh cong.\n");
 }
 
-//-------------------------- HAM CHINH SUA THUOC --------------------------
-void chinhSuaThuocTheoID(Thuoc danhSachThuoc[], int soLuongThuoc) {
-    char id[MAX_ID];
-    printf("Nhap ma thuoc can chinh sua: ");
-    fgets(id, MAX_ID, stdin);
-    id[strcspn(id, "\n")] = 0;
+// ========================== HAM CHINH SUA THUOC ==========================
+void chinhSuaThuocTheoID(Thuoc danhSachThuoc[], int soLuongThuoc, char ID[MAX_ID]) {
+    // char id[MAX_ID];
+    // printf("Nhap ma thuoc can chinh sua: ");
+    // fgets(id, MAX_ID, stdin);
+    // id[strcspn(id, "\n")] = 0;
 
-    int viTri = timViTriTheoID(danhSachThuoc, soLuongThuoc, id);
+    int viTri = timViTriTheoID(danhSachThuoc, soLuongThuoc, ID);
     if (viTri == -1) {
-        printf("Khong tim thay thuoc co ID \"%s\".\n", id);
+        printf("Khong tim thay thuoc co ID \"%s\".\n", ID);
         return;
+    }else{
+        printf("ID: %s | Ten: %s | Don vi: %s | So luong: %d | Gia: %.2f| Han Su Dung: %d/%d/%d\n",
+                    danhSachThuoc[viTri].id, danhSachThuoc[viTri].ten, danhSachThuoc[viTri].donVi,
+                    danhSachThuoc[viTri].soLuong, danhSachThuoc[viTri].gia,danhSachThuoc[viTri].ngay, danhSachThuoc[viTri].thang, danhSachThuoc[viTri].nam);
     }
 
     printf("Nhap ten moi: ");
@@ -743,9 +853,10 @@ void chinhSuaThuocTheoID(Thuoc danhSachThuoc[], int soLuongThuoc) {
     scanf("%lf", &danhSachThuoc[viTri].gia);
     getchar();
     
-    printf("Nhap han su dung moi: ");
-    fgets(danhSachThuoc[viTri].hanSuDung, MAX_HANSUDUNG, stdin);
-    danhSachThuoc[viTri].hanSuDung[strcspn(danhSachThuoc[viTri].hanSuDung, "\n")] = 0;
+    printf("Nhap han su dung moi (dd/mm/yyyy): ");
+    // fgets(danhSachThuoc[viTri].hanSuDung, MAX_HANSUDUNG, stdin);
+    // danhSachThuoc[viTri].hanSuDung[strcspn(danhSachThuoc[viTri].hanSuDung, "\n")] = 0;
+    scanf("%d/%d/%d", &danhSachThuoc[viTri].ngay, &danhSachThuoc[viTri].thang, &danhSachThuoc[viTri].nam);
 
     printf("Da cap nhat thong tin thuoc.\n");
 }
@@ -753,14 +864,136 @@ void chinhSuaThuocTheoID(Thuoc danhSachThuoc[], int soLuongThuoc) {
 
 //================================================== Nam Anh ==================================================
 
+void chinhSuaThuocTheoTen(Thuoc danhSachThuoc[], int soLuongThuoc) {
+    char tenCanSua[MAX_TEN];
+    printf("Nhap ten thuoc can chinh sua: ");
+    fgets(tenCanSua, MAX_TEN, stdin);
+    tenCanSua[strcspn(tenCanSua, "\n")] = 0;
+
+    int timThay = 0;
+    for (int i = 0; i < soLuongThuoc; i++) {
+        if (strcmp(danhSachThuoc[i].ten, tenCanSua) == 0) {
+           chinhSuaThuocTheoID(danhSachThuoc, soLuongThuoc, danhSachThuoc[i].id);
+           timThay = 1;
+           break;
+        }
+    }
+
+    if (!timThay) {
+        printf("Khong tim thay thuoc voi ten \"%s\".\n", tenCanSua);
+    }
+}
+
+void sapXepTheoTen(Thuoc danhSachThuoc[], int soLuongThuoc) {
+    for (int i = 0; i < soLuongThuoc - 1; i++) {
+        for (int j = i + 1; j < soLuongThuoc; j++) {
+            if (strcmp(danhSachThuoc[i].ten, danhSachThuoc[j].ten) > 0) {
+                Thuoc temp = danhSachThuoc[i];
+                danhSachThuoc[i] = danhSachThuoc[j];
+                danhSachThuoc[j] = temp;
+            }
+        }
+    }
+    printf("Da sap xep danh sach thuoc theo ten.\n");
+}
+
+int soSanhHanSuDung(Thuoc a, Thuoc b) {
+    if (a.nam != b.nam) return a.nam - b.nam;
+    if (a.thang != b.thang) return a.thang - b.thang;
+    return a.ngay - b.ngay;
+}
+
+void sapXepTheoHanSuDung(Thuoc danhSachThuoc[], int soLuongThuoc) {
+    for (int i = 0; i < soLuongThuoc - 1; i++) {
+        for (int j = i + 1; j < soLuongThuoc; j++) {
+            if (soSanhHanSuDung(danhSachThuoc[i], danhSachThuoc[j]) > 0) {
+                Thuoc temp = danhSachThuoc[i];
+                danhSachThuoc[i] = danhSachThuoc[j];
+                danhSachThuoc[j] = temp;
+            }
+        }
+    }
+    printf("Da sap xep danh sach thuoc theo han su dung.\n");
+}
+
+// Thao tác với file =======================
+
+void docThuocTuFile(Thuoc danhSachThuoc[], int &soLuongThuoc) {
+    ifstream file("thuoc_new.txt");
+    if (!file) {
+        file.open("thuoc_old.txt");
+        if (!file) {
+            cout << "Khong tim thay file thuoc.\n";
+            return;
+        }
+    }
+
+    soLuongThuoc = 0;
+    string line;
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string soLuongStr, giaStr, ngayStr, thangStr, namStr;
+
+        getline(ss, line, ',');
+        strncpy(danhSachThuoc[soLuongThuoc].id, line.c_str(), MAX_ID);
+        danhSachThuoc[soLuongThuoc].id[MAX_ID - 1] = '\0';
+
+        getline(ss, line, ',');
+        strncpy(danhSachThuoc[soLuongThuoc].ten, line.c_str(), MAX_TEN);
+        danhSachThuoc[soLuongThuoc].ten[MAX_TEN - 1] = '\0';
+
+        getline(ss, line, ',');
+        strncpy(danhSachThuoc[soLuongThuoc].donVi, line.c_str(), MAX_DONVI);
+        danhSachThuoc[soLuongThuoc].donVi[MAX_DONVI - 1] = '\0';
+
+        getline(ss, soLuongStr, ',');
+        getline(ss, giaStr, ',');
+        getline(ss, ngayStr, ',');
+        getline(ss, thangStr, ',');
+        getline(ss, namStr, '\n');
+
+        danhSachThuoc[soLuongThuoc].soLuong = stoi(soLuongStr);
+        danhSachThuoc[soLuongThuoc].gia = stod(giaStr);
+        danhSachThuoc[soLuongThuoc].ngay = stoi(ngayStr);
+        danhSachThuoc[soLuongThuoc].thang = stoi(thangStr);
+        danhSachThuoc[soLuongThuoc].nam = stoi(namStr);
+
+        soLuongThuoc++;
+        if (soLuongThuoc >= MAX_THUOC) break;
+    }
+    file.close();
+    cout << "Da nap " << soLuongThuoc << " thuoc tu file.\n";
+}
+
+void ghiThuocVaoFile(Thuoc danhSachThuoc[], int soLuongThuoc) {
+    ofstream file("thuoc_new.txt");
+    if (!file) {
+        cout << "Khong mo duoc file de ghi.\n";
+        return;
+    }
+
+    for (int i = 0; i < soLuongThuoc; i++) {
+        file << danhSachThuoc[i].id << ","
+             << danhSachThuoc[i].ten << ","
+             << danhSachThuoc[i].donVi << ","
+             << danhSachThuoc[i].soLuong << ","
+             << danhSachThuoc[i].gia << ","
+             << danhSachThuoc[i].ngay << ","
+             << danhSachThuoc[i].thang << ","
+             << danhSachThuoc[i].nam << "\n";
+    }
+
+    file.close();
+    cout << "Da luu danh sach thuoc vao file.\n";
+}
+
 //-------------------------- ĐỌC/GHI FILE --------------------------
-BenhNhan danhSach[MAX];
-int soLuong = 0;
 
-#include <fstream>
-#include <sstream>
+// BenhNhan danhSach[MAX];
+// int soLuong = 0;
 
-// void docDuLieuTuFile() {
+
+// void docThuocTuFile() {
 //     ifstream file("benhnhan_new.txt");
 //     if (!file) {
 //         file.open("benhnhan_old.txt");
@@ -796,6 +1029,92 @@ int soLuong = 0;
 //     file.close();
 //     cout << "Da nap " << soLuong << " benh nhan tu file.\n";
 // }
+
+// void ghiThuocRaFile() {
+//     ofstream file("benhnhan_new.txt");
+//     if (!file) {
+//         cout << "Khong the mo file de ghi.\n";
+//         return;
+//     }
+
+//     for (int i = 0; i < soLuong; i++) {
+//         file << danhSach[i].id << ","
+//              << danhSach[i].hoTen << ","
+//              << danhSach[i].tuoi << ","
+//              << danhSach[i].diaChi << ","
+//              << danhSach[i].GioiTinh << ","
+//              << danhSach[i].maBenhNhan << ","
+//              << danhSach[i].TienSuBenhAn << ","
+//              << danhSach[i].luuTru << "\n";
+//     }
+
+//     file.close();
+//     cout << "Da luu danh sach vao file benhnhan_new.txt\n";
+// }
+
+
+void ghiYTaRaFile(Room hospital[]);
+
+// Hàm phụ đệ quy để ghi từng y tá
+void ghiNurseNode(ofstream& file, NurseNode* root) {
+    if (!root) return;
+    ghiNurseNode(file, root->left);
+    file << "NurseName:" << root->data.name << "\n";
+    file << "Shift:" << root->data.shift << "\n";
+    ghiNurseNode(file, root->right);
+}
+
+void docYTaTuFile(Room hospital[]) {
+    ifstream file("nurse_data.txt");
+    if (!file) {
+        cout << "Khong tim thay file nurse_data.txt\n";
+        return;
+    }
+
+    string line, roomType = "";
+    while (getline(file, line)) {
+        if (line.rfind("RoomType:", 0) == 0) {
+            roomType = line.substr(9); // Lấy phần sau "RoomType:"
+        } else if (line.rfind("NurseName:", 0) == 0) {
+            Nurse n;
+            strcpy(n.name, line.substr(10).c_str());
+
+            if (getline(file, line) && line.rfind("Shift:", 0) == 0) {
+                strcpy(n.shift, line.substr(6).c_str());
+            } else continue;
+
+            Room* r = findAvailableRoom(roomType.c_str());
+            if (r) {
+                r->nurseRoot = insertNurse(r->nurseRoot, n);
+                r->nurseCount++;
+            }
+        }
+    }
+
+    file.close();
+    cout << "Da nap du lieu y ta tu file nurse_data.txt\n";
+}
+
+
+void ghiYTaRaFile(Room hospital[]) {
+    ofstream file("nurse_data.txt");
+    if (!file) {
+        cout << "Khong the mo file nurse_data.txt de ghi.\n";
+        return;
+    }
+
+    for (int i = 0; i < TOTAL_ROOMS; i++) {
+        Room& r = hospital[i];
+        if (r.nurseRoot) {
+            file << "RoomType:" << r.type << "\n";
+            ghiNurseNode(file, r.nurseRoot);  // Ghi y tá của phòng đó
+        }
+    }
+
+    file.close();
+    cout << "Da luu du lieu y ta vao file nurse_data.txt\n";
+}
+
 
 
 void docDuLieuTuFile(Node*& head, Node*& tail) {
@@ -835,28 +1154,6 @@ void docDuLieuTuFile(Node*& head, Node*& tail) {
 }
 
 
-// void ghiDuLieuRaFile() {
-//     ofstream file("benhnhan_new.txt");
-//     if (!file) {
-//         cout << "Khong the mo file de ghi.\n";
-//         return;
-//     }
-
-//     for (int i = 0; i < soLuong; i++) {
-//         file << danhSach[i].id << ","
-//              << danhSach[i].hoTen << ","
-//              << danhSach[i].tuoi << ","
-//              << danhSach[i].diaChi << ","
-//              << danhSach[i].GioiTinh << ","
-//              << danhSach[i].maBenhNhan << ","
-//              << danhSach[i].TienSuBenhAn << ","
-//              << danhSach[i].luuTru << "\n";
-//     }
-
-//     file.close();
-//     cout << "Da luu danh sach vao file benhnhan_new.txt\n";
-// }
-
 void ghiDuLieuRaFile(Node* head) {
     ofstream file("benhnhan_new.txt");
     if (!file) {
@@ -885,161 +1182,6 @@ void ghiDuLieuRaFile(Node* head) {
 
 //------------------------------------------------------------------
 
-
-
-void timKiemBenhNhan() {
-    int chon;
-    do {
-        printf("\n--- Tim kiem benh nhan ---\n");
-        printf("1. Theo ID\n2. Theo ten\n3. Theo phong benh\n0. Quay lai menu chinh\nChon: ");
-        scanf("%d", &chon); getchar();
-
-        if (chon == 1) {
-            int id;
-            printf("Nhap ID: "); scanf("%d", &id);
-            for (int i = 0; i < soLuong; i++) {
-                if (danhSach[i].id == id) {
-                    printf("Tim thay: %s | Tuoi: %d | Dia chi: %s | Gioi Tinh: %s | Ma benh nhan: %s | Tien su benh an: %s | Luu Tru: %d\n",
-                        danhSach[i].hoTen.c_str(),
-                        danhSach[i].tuoi,
-                        danhSach[i].diaChi.c_str(),
-                        danhSach[i].GioiTinh.c_str(),
-                        danhSach[i].maBenhNhan.c_str(),
-                        danhSach[i].TienSuBenhAn.c_str(),
-                        danhSach[i].luuTru);
-                    break;
-                }
-                if(i+1 == soLuong) {
-                    printf("Khong tim thay!\n");
-                    break;
-                }
-            }
-        } else if (chon == 2) {
-            string hoTen;
-            printf("Nhap ten: "); getline(cin, hoTen);
-            if (!hoTen.empty() && hoTen.back() == '\n') {
-                hoTen.pop_back(); // Xoá ký tự cuối nếu là '\n'
-            }
-            for (int i = 0; i < soLuong; i++) {
-                if (danhSach[i].hoTen == hoTen) {
-                    printf("Tim thay: %s | Tuoi: %d | Dia chi: %s | Gioi Tinh: %s | Ma benh nhan: %s | Tien su benh an: %s | Luu Tru: %d\n",
-                        danhSach[i].hoTen.c_str(),
-                        danhSach[i].tuoi,
-                        danhSach[i].diaChi.c_str(),
-                        danhSach[i].GioiTinh.c_str(),
-                        danhSach[i].maBenhNhan.c_str(),
-                        danhSach[i].TienSuBenhAn.c_str(),
-                        danhSach[i].luuTru);
-                    break;
-                }
-                if(i+1 == soLuong) {
-                    printf("Khong tim thay!\n");
-                    break;
-                }
-            }
-        } 
-        // else if (chon == 3) {
-        //     char phong[20];
-        //     printf("Nhap phong benh: "); fgets(phong, sizeof(phong), stdin);
-        //     phong[strcspn(phong, "\n")] = '\0';
-        //     for (int i = 0; i < soLuong; i++) {
-        //         if (strcmp(danhSach[i].phong, phong) == 0) {
-        //             printf("Tim thay: ID %d | Ten: %s | Tuoi: %d | Dia chi: %s | Uu tien: %d\n",
-        //                 danhSach[i].id, danhSach[i].hoTen, danhSach[i].tuoi,
-        //                 danhSach[i].diaChi, danhSach[i].mucDoUuTien);
-        //             break;
-        //         }
-        //         if(i+1 == soLuong) {
-        //             printf("Khong tim thay!\n");
-        //             break;
-        //         }
-        //     }
-        // }
-    } while (chon != 0);
-}
-
-// char layChuCuoiCuaTen(char *hoTen) {
-//     int len = strlen(hoTen);
-//     while (len > 0 && hoTen[len - 1] == ' ') len--; // Bỏ khoảng trắng cuối
-//     return (len > 0) ? hoTen[len - 1] : '\0';
-// }
-
-void sapXepTheoTen(int tangDan) {
-    for (int i = 0; i < soLuong - 1; i++) {
-        for (int j = i + 1; j < soLuong; j++) {
-            char cuoi1 = danhSach[i].hoTen.back();
-            char cuoi2 = danhSach[j].hoTen.back();;
-            if ((tangDan && cuoi1 > cuoi2) || (!tangDan && cuoi1 < cuoi2)) {
-                BenhNhan temp = danhSach[i];
-                danhSach[i] = danhSach[j];
-                danhSach[j] = temp;
-            }
-        }
-    }
-}
-
-
-void sapXepTheoTuoi(int tangDan) {
-    for (int i = 0; i < soLuong - 1; i++) {
-        for (int j = i + 1; j < soLuong; j++) {
-            if ((tangDan && danhSach[i].tuoi > danhSach[j].tuoi) ||
-                (!tangDan && danhSach[i].tuoi < danhSach[j].tuoi)) {
-                BenhNhan temp = danhSach[i];
-                danhSach[i] = danhSach[j];
-                danhSach[j] = temp;
-            }
-        }
-    }
-}
-
-// void sapXepTheoUuTien(int tangDan) {
-//     for (int i = 0; i < soLuong - 1; i++) {
-//         for (int j = i + 1; j < soLuong; j++) {
-//             if ((tangDan && danhSach[i].mucDoUuTien > danhSach[j].mucDoUuTien) ||
-//                 (!tangDan && danhSach[i].mucDoUuTien < danhSach[j].mucDoUuTien)) {
-//                 BenhNhan temp = danhSach[i];
-//                 danhSach[i] = danhSach[j];
-//                 danhSach[j] = temp;
-//             }
-//         }
-//     }
-// }
-
-void hienThiDanhSach() {
-    printf("\n--- Danh sach benh nhan ---\n");
-    for (int i = 0; i < soLuong; i++) {
-        printf("ID: %lld | Ma benh nhan: %s | Ho Ten: %s | Tuoi: %d | Dia chi: %s | Gioi Tinh: %s | Tien su benh an: %s | Luu Tru: %d\n",
-            danhSach[i].id,
-            danhSach[i].maBenhNhan.c_str(),
-            danhSach[i].hoTen.c_str(),
-            danhSach[i].tuoi,
-            danhSach[i].diaChi.c_str(),
-            danhSach[i].GioiTinh.c_str(),
-            danhSach[i].TienSuBenhAn.c_str(),
-            danhSach[i].luuTru
-        );
-    }
-}
-
-void sapXepBenhNhan() {
-    int chon, tangDan;
-    do {
-        printf("\n--- Sap xep danh sach benh nhan ---\n");
-        printf("1. Theo ten\n2. Theo tuoi\n3. Theo muc do uu tien\n0. Quay lai\nChon: ");
-        scanf("%d", &chon); getchar();
-
-        if (chon >= 1 && chon <= 3) {
-            printf("Chon kieu sap xep (1. Tang dan | 0. Giam dan): ");
-            scanf("%d", &tangDan); getchar();
-        }
-
-        switch (chon) {
-            case 1: sapXepTheoTen(tangDan); hienThiDanhSach(); break;
-            case 2: sapXepTheoTuoi(tangDan); hienThiDanhSach(); break;
-            // case 3: sapXepTheoUuTien(tangDan); hienThiDanhSach(); break;
-        }
-    } while (chon != 0);
-}
 
 void runPatientManagement(){
     Node* head = nullptr;
@@ -1107,136 +1249,235 @@ ghiDuLieuRaFile(head);
 }
 
 void runHospitalMenu(Room hospital[]) {
+    setupHospital(hospital);
+    docYTaTuFile(hospital);      // <-- Nạp y tá
     int choice;
+    char buffer[10];
     do {
-        printf("\n========= MENU QUẢN LÝ BỆNH VIỆN =========\n");
-        printf("1. Xem báo cáo bệnh viện\n");
-        printf("2. Xem thông tin phòng\n");
-        printf("3. Thêm y tá cho phòng\n");
-        printf("4. Xóa y tá khỏi phòng\n");
-        printf("5. Xem danh sách y tá của phòng\n");
-        printf("0. Thoát\n");
-        printf("Chọn chức năng: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                printHospitalReport(hospital);
-                break;
-            case 2: {
-                int roomIndex;
-                printf("Nhập chỉ số phòng (0-%d): ", TOTAL_ROOMS - 1);
-                scanf("%d", &roomIndex);
-                getchar();
-                if (roomIndex >= 0 && roomIndex < TOTAL_ROOMS) {
-                    printRoomInfo(&hospital[roomIndex]);
-                } else {
-                    printf("Chỉ số phòng không hợp lệ!\n");
-                }
-                break;
-            }
-            case 3: {
-                int roomIndex;
-                printf("Nhập chỉ số phòng (0-%d): ", TOTAL_ROOMS - 1);
-                scanf("%d", &roomIndex);
-                getchar();
-                if (roomIndex >= 0 && roomIndex < TOTAL_ROOMS) {
-                    Nurse nurse;
-                    printf("Nhập tên y tá: ");
-                    fgets(nurse.name, sizeof(nurse.name), stdin);
-                    nurse.name[strcspn(nurse.name, "\n")] = 0;
-                    printf("Nhập ca trực: ");
-                    fgets(nurse.shift, sizeof(nurse.shift), stdin);
-                    nurse.shift[strcspn(nurse.shift, "\n")] = 0;
-                    addNurse(&hospital[roomIndex], nurse);
-                } else {
-                    printf("Chỉ số phòng không hợp lệ!\n");
-                }
-                break;
-            }
-            case 4: {
-                int roomIndex;
-                printf("Nhập chỉ số phòng (0-%d): ", TOTAL_ROOMS - 1);
-                scanf("%d", &roomIndex);
-                getchar();
-                if (roomIndex >= 0 && roomIndex < TOTAL_ROOMS) {
-                    char name[100];
-                    printf("Nhập tên y tá cần xóa: ");
-                    fgets(name, sizeof(name), stdin);
-                    name[strcspn(name, "\n")] = 0;
-                    deleteNurse(&hospital[roomIndex], name);
-                } else {
-                    printf("Chỉ số phòng không hợp lệ!\n");
-                }
-                break;
-            }
-            case 5: {
-                int roomIndex;
-                printf("Nhập chỉ số phòng (0-%d): ", TOTAL_ROOMS - 1);
-                scanf("%d", &roomIndex);
-                getchar();
-                if (roomIndex >= 0 && roomIndex < TOTAL_ROOMS) {
-                    printNurses(&hospital[roomIndex]);
-                } else {
-                    printf("Chỉ số phòng không hợp lệ!\n");
-                }
-                break;
-            }
-            case 0:
-                printf("Thoát menu quản lý bệnh viện.\n");
-                break;
-            default:
-                printf("Lựa chọn không hợp lệ!\n");
-                break;
-        }
-    } while (choice != 0);
-}
-void runQuanLyThuoc() {
-    Thuoc danhSachThuoc[MAX_THUOC];
-    int soLuongThuoc = 0;
-    int choice;
-    do {
-        printf("\n===== QUAN LY THUOC =====\n");
-        printf("1. Them thuoc\n");
-        printf("2. Xoa thuoc theo ID\n");
-        printf("3. Chinh sua thuoc theo ID\n");
-        printf("4. Xem danh sach thuoc\n");
+        printf("\n========= MENU =========\n");
+        printf("1. Them benh nhan\n");
+        printf("2. Xem danh sach benh nhan\n");
+        printf("3. Them y ta\n");
+        printf("4. Xem danh sach y ta\n");
         printf("0. Thoat\n");
-        printf("Chon chuc nang: ");
+        printf("Chon: ");
+
         scanf("%d", &choice);
         getchar();
 
-        switch (choice) {
-            case 1:
-                themThuoc(danhSachThuoc, &soLuongThuoc);
-                break;
-            case 2:
-                xoaThuocTheoID(danhSachThuoc, &soLuongThuoc);
-                break;
-            case 3:
-                chinhSuaThuocTheoID(danhSachThuoc, soLuongThuoc);
-                break;
-            case 4:
-                printf("\n%-10s %-20s %-10s %-10s %-10s %-15s\n", "ID", "Ten", "Don Vi", "So Luong", "Gia", "Han SD");
-                for (int i = 0; i < soLuongThuoc; i++) {
-                    printf("%-10s %-20s %-10s %-10d %-10.2lf %-15s\n",
-                        danhSachThuoc[i].id,
-                        danhSachThuoc[i].ten,
-                        danhSachThuoc[i].donVi,
-                        danhSachThuoc[i].soLuong,
-                        danhSachThuoc[i].gia,
-                        danhSachThuoc[i].hanSuDung
-                    );
+        if (choice == 1) {
+           
+            // char type[2];
+            // printf("Loai phong (S/A/F/E/O): ");
+            // readLine(type, sizeof(type));
+            // Room* r = findAvailableRoom(type);
+            // if (!r) { printf("Khong co phong trong.\n"); continue; }
+            // Patient p;
+            // p.id = patientIDCounter++;
+            // printf("Ten: "); readLine(p.name, sizeof(p.name)); getchar();cin.ignore();
+            // printf("CCCD: "); readLine(p.cccd, sizeof(p.cccd)); getchar();cin.ignore();
+            // printf("Tuoi: "); scanf("%d", &p.age);cin.ignore();
+            // printf("Trang thai: "); readLine(p.state, sizeof(p.state)); getchar();cin.ignore();
+            // printf("Lich su: "); readLine(p.history, sizeof(p.history)); getchar();cin.ignore();
+            // printf("Uu tien: "); scanf("%d", &p.priority);cin.ignore();
+
+            // r->patientRoot = insertPatient(r->patientRoot, p);
+            // r->patientCount++;
+            // printf("Da them benh nhan ID %d\n", p.id);
+
+            if (choice == 1) {
+    char type[2];
+    printf("Loai phong (S/A/F/E/O): ");
+    readLine(type, sizeof(type));
+    Room* r = findAvailableRoom(type);
+    if (!r) { printf("Khong co phong trong.\n"); continue; }
+    Patient p;
+    p.id = patientIDCounter++;
+    cin.ignore();   
+    printf("Ten: "); readLine(p.name, sizeof(p.name));
+    printf("CCCD: "); readLine(p.cccd, sizeof(p.cccd));
+    printf("Tuoi: "); char buf[16]; readLine(buf, sizeof(buf)); p.age = atoi(buf);
+    printf("Trang thai: "); readLine(p.state, sizeof(p.state));
+    printf("Lich su: "); readLine(p.history, sizeof(p.history));
+    printf("Uu tien: "); readLine(buf, sizeof(buf)); p.priority = atoi(buf);
+    r->patientRoot = insertPatient(r->patientRoot, p);
+    r->patientCount++;
+    printf("Da them benh nhan ID %d\n", p.id);
+}
+        }
+        else if (choice == 2) {
+            for (int i = 0; i < TOTAL_ROOMS; i++) {
+                if (hospital[i].patientRoot) {
+                    printf("\n-- Phong %s-tier --\n", hospital[i].type);
+                    printPatients(hospital[i].patientRoot);
                 }
-                break;
-            case 0:
-                printf("Thoat chuong trinh quan ly thuoc.\n");
-                break;
-            default:
-                printf("Lua chon khong hop le!\n");
+            }
+        }
+        else if (choice == 3) {
+            char type[2];
+            printf("Loai phong de them y ta (S/A/F/E/O): ");
+            readLine(type, sizeof(type));
+            Room* r = findAvailableRoom(type);
+            if (!r) { printf("Khong tim thay phong loai nay.\n"); continue; }
+            Nurse n;
+            printf("Ten y ta: "); readLine(n.name, sizeof(n.name));
+            printf("Ca truc: "); readLine(n.shift, sizeof(n.shift));
+            r->nurseRoot = insertNurse(r->nurseRoot, n);
+            r->nurseCount++;
+            printf("Da them y ta %s\n", n.name);
+        }
+        else if (choice == 4) {
+            bool coYTa = false;
+            for (int i = 0; i < TOTAL_ROOMS; i++) {
+                if (hospital[i].nurseRoot) {
+                    coYTa = true;
+                    printf("\n-- Y ta o phong %s-tier --\n", hospital[i].type);
+                    printNurses(hospital[i].nurseRoot);
+                }
+            }
+            if (!coYTa) {
+                printf("Khong co y ta nao!\n");
+            }
         }
     } while (choice != 0);
+    ghiYTaRaFile(hospital); 
 }
+
+// ========================== CAP NHAT MENU ==========================
+void menuThuoc() {
+    printf("\n===== MENU =====\n");
+    printf("1. Hien thi danh sach thuoc\n");
+    printf("2. Them thuoc moi\n");
+    printf("3. Tim thuoc theo ten\n");
+    printf("4. Xoa thuoc theo ma\n");
+    printf("5. Chinh sua thong tin thuoc\n");
+    printf("6. Chinh sua thuoc theo ten\n");
+    printf("7. Sap xep thuoc theo ten\n");
+    printf("8. Sap xep thuoc theo han su dung\n");
+
+    printf("0. Thoat\n");
+    printf("===============\n");
+    printf("Chon: ");
+}
+
+// void runQuanLyThuoc() {
+//     Thuoc danhSachThuoc[MAX_THUOC];
+//     int soLuongThuoc = 0;
+//     int choice;
+//     do {
+//         printf("\n===== QUAN LY THUOC =====\n");
+//         printf("1. Them thuoc\n");
+//         printf("2. Xoa thuoc theo ID\n");
+//         printf("3. Chinh sua thuoc theo ID\n");
+//         printf("4. Xem danh sach thuoc\n");
+//         printf("0. Thoat\n");
+//         printf("Chon chuc nang: ");
+//         scanf("%d", &choice);
+//         getchar();
+
+//         switch (choice) {
+//             case 1:
+//                 themThuoc(danhSachThuoc, &soLuongThuoc);
+//                 break;
+//             case 2:
+//                 xoaThuocTheoID(danhSachThuoc, &soLuongThuoc);
+//                 break;
+//             case 3:
+//                 chinhSuaThuocTheoID(danhSachThuoc, soLuongThuoc);
+//                 break;
+//             case 4:
+//                 printf("\n%-10s %-20s %-10s %-10s %-10s %-15s\n", "ID", "Ten", "Don Vi", "So Luong", "Gia", "Han SD");
+//                 for (int i = 0; i < soLuongThuoc; i++) {
+//                     printf("%-10s %-20s %-10s %-10d %-10.2lf %-15s\n",
+//                         danhSachThuoc[i].id,
+//                         danhSachThuoc[i].ten,
+//                         danhSachThuoc[i].donVi,
+//                         danhSachThuoc[i].soLuong,
+//                         danhSachThuoc[i].gia,
+//                         danhSachThuoc[i].hanSuDung
+//                     );
+//                 }
+//                 break;
+//             case 0:
+//                 printf("Thoat chuong trinh quan ly thuoc.\n");
+//                 break;
+//             default:
+//                 printf("Lua chon khong hop le!\n");
+//         }
+//     } while (choice != 0);
+// }
+
+void runQuanLyThuoc() {
+    Thuoc danhSachThuoc[MAX_THUOC];
+    int soLuongThuoc = 0;
+
+    docThuocTuFile(danhSachThuoc, soLuongThuoc);
+
+    int luaChon;
+    do {
+        menuThuoc();
+        scanf("%d", &luaChon);
+        getchar();
+
+        switch (luaChon) {
+            case 1:
+                for (int i = 0; i < soLuongThuoc; i++) {
+                    printf("ID: %s | Ten: %s | Don vi: %s | So luong: %d | Gia: %.2f| Han Su Dung: %d/%d/%d\n",
+                               danhSachThuoc[i].id, danhSachThuoc[i].ten, danhSachThuoc[i].donVi,
+                               danhSachThuoc[i].soLuong, danhSachThuoc[i].gia,danhSachThuoc[i].ngay, danhSachThuoc[i].thang, danhSachThuoc[i].nam);
+                    }
+                break;
+            case 2:
+                themThuoc(danhSachThuoc, &soLuongThuoc);
+                break;
+            case 3: {
+                char tenCanTim[MAX_TEN];
+                printf("Nhap ten thuoc can tim: ");
+                fgets(tenCanTim, MAX_TEN, stdin);
+                tenCanTim[strcspn(tenCanTim, "\n")] = 0;
+                int timThay = 0;
+                for (int i = 0; i < soLuongThuoc; i++) {
+                    if (strcmp(danhSachThuoc[i].ten, tenCanTim) == 0) {
+                        printf("ID: %s | Ten: %s | Don vi: %s | So luong: %d | Gia: %.2f| Han Su Dung: %d/%d/%d\n",
+                               danhSachThuoc[i].id, danhSachThuoc[i].ten, danhSachThuoc[i].donVi,
+                               danhSachThuoc[i].soLuong, danhSachThuoc[i].gia,danhSachThuoc[i].ngay, danhSachThuoc[i].thang, danhSachThuoc[i].nam);
+                        timThay = 1;
+                    }
+                }
+                if (!timThay) printf("Khong tim thay thuoc.\n");
+                break;
+            }
+            case 4:
+                xoaThuocTheoID(danhSachThuoc, &soLuongThuoc);
+                break;
+            case 5:
+                char id[MAX_ID];
+                printf("Nhap ma thuoc can chinh sua: ");
+                fgets(id, MAX_ID, stdin);
+                id[strcspn(id, "\n")] = 0;
+                chinhSuaThuocTheoID(danhSachThuoc, soLuongThuoc, id);
+                break;
+            case 6:
+                chinhSuaThuocTheoTen(danhSachThuoc, soLuongThuoc);
+                break;
+            case 7:
+                sapXepTheoTen(danhSachThuoc, soLuongThuoc);
+                break;
+            case 8:
+                sapXepTheoHanSuDung(danhSachThuoc, soLuongThuoc);
+                break;
+            case 0:
+                printf("Thoat chuong trinh.\n");
+                break;
+            default:
+                printf("Lua chon khong hop le.\n");
+        }
+    } while (luaChon != 0);
+
+    ghiThuocVaoFile(danhSachThuoc, soLuongThuoc);
+
+}
+
 // ========================== HÀM MAIN ==========================
 
 int main() {
@@ -1259,9 +1500,9 @@ int main() {
             runPatientManagement(); 
             break;
             case 2: 
-            runHospitalMenu(hospital); 
+            runHospitalMenu(hospital);
             break;
-            case 3: 
+            case 3:     
             runQuanLyThuoc(); 
             break;
             case 0:
@@ -1273,4 +1514,4 @@ int main() {
     } while (mainChoice != 0);
 
     return 0;
-}//test đi
+}
