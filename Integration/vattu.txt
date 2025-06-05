@@ -1,0 +1,10 @@
+VT010,Bộ truyền dịch,Thiết bị,Bộ,40,35000.00,15,10,2025,15,10,2027,3,Phòng điều trị,Không
+VT009,Kim tiêm,Dụng cụ,Cái,500,700.00,10,9,2025,10,9,2026,2,Phòng tiêm chủng,Không
+VT008,Ống nghe,Thiết bị,Cái,30,50000.00,5,8,2025,5,8,2028,0,Phòng khám,Không
+VT007,Băng cá nhân,Chăm sóc,Hộp,120,3000.00,30,7,2025,30,7,2026,1,Phòng cấp cứu,Không
+VT006,Dung dịch sát khuẩn,Hóa chất,Chai,60,25000.00,25,6,2025,25,6,2026,0,Phòng điều trị,Không
+VT005,Bơm tiêm,Dụng cụ,Cái,400,800.00,20,5,2025,20,5,2026,2,Phòng tiêm chủng,Không
+VT004,Nhiệt kế,Thiết bị,Cái,50,15000.00,15,4,2025,15,4,2027,1,Phòng xét nghiệm,Không
+VT003,Khẩu trang,Phòng dịch,Cái,300,1000.00,10,3,2025,10,3,2026,0,Phòng khám,Không
+VT002,Găng tay,Phẫu thuật,Đôi,200,2000.00,5,2,2025,5,2,2026,1,Phòng mổ,Không
+VT001,Bong y te,Chăm sóc,Bịch,100,5000.00,1,1,2025,1,1,2026,0,Phòng cấp cứu,Không
